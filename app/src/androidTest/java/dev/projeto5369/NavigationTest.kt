@@ -26,6 +26,9 @@ class NavigationTest {
         compose.onNodeWithText("Abrir vídeo",useUnmergedTree=true).performClick()
         compose.onNodeWithText("Reproduzir",useUnmergedTree=true).assertIsDisplayed()
         compose.onNodeWithText("Favoritar no aparelho").performScrollTo().performClick()
+        compose.waitUntil(timeoutMillis=5_000) {
+            compose.onAllNodesWithText("Remover dos favoritos").fetchSemanticsNodes().isNotEmpty()
+        }
         compose.onNodeWithText("Biblioteca",useUnmergedTree=true).performClick()
         compose.onNodeWithText("Favoritos locais").assertIsDisplayed()
     }

@@ -57,7 +57,12 @@ class AppViewModel(app: Application): AndroidViewModel(app) {
     private suspend fun load(target: MutableStateFlow<CatalogState>,fetch: suspend () -> Page<Video>,append: Boolean = false) {
         try {
             val page = fetch()
-            target.update { it.copy(items=(if(append) it.items + page.items else page.items).distinctBy(Video::id),cursor=page.next,loading=false,error=null) }
+            target.update { current ->
+                val items=page.items.map { video -> current.channel?.let { channel ->
+                    video.copy(channel=video.channel.ifBlank { channel.title },channelId=video.channelId ?: channel.id)
+                } ?: video }
+                current.copy(items=(if(append) current.items + items else items).distinctBy(Video::id),cursor=page.next,loading=false,error=null)
+            }
         } catch(e: CancellationException) { throw e } catch(e: Exception) { fail(target,e) }
     }
     fun more(key: String) {
