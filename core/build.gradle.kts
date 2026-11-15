@@ -8,3 +8,9 @@ dependencies {
     testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
 }
+
+tasks.test {
+    val live = (project.findProperty("yt.live") as String?) ?: "false"
+    systemProperty("yt.live", live)
+    if(live == "true") { outputs.upToDateWhen { false }; testLogging { showStandardStreams = true; events("passed","failed","skipped"); exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL } }
+}

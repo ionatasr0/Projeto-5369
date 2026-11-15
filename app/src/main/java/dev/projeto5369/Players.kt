@@ -9,6 +9,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
@@ -90,8 +91,8 @@ fun YouTubePlayer(video: Video,onPlaying: () -> Unit) {
         if(playback == PlaybackState.LOADING) { error="O player não respondeu. Verifique a rede ou abra no YouTube."; playback=PlaybackState.ERROR }
     }
     Column(verticalArrangement=Arrangement.spacedBy(8.dp)) {
-        AndroidView(factory={webView},modifier=Modifier.fillMaxWidth().aspectRatio(16f/9f))
-        Text(when(playback) {
+        AndroidView(factory={webView},modifier=Modifier.fillMaxWidth().aspectRatio(16f/9f).testTag("yt-player"))
+        Text(modifier=Modifier.testTag("yt-status"),text=when(playback) {
             PlaybackState.LOADING -> "Carregando player oficial…"
             PlaybackState.READY -> "Toque em reproduzir no player."
             PlaybackState.PLAYING -> "Reproduzindo no YouTube"

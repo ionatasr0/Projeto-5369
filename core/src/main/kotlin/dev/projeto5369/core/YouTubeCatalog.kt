@@ -57,16 +57,26 @@ class YouTubeCatalog(
         val html = request("results",mapOf("search_query" to query,"hl" to "pt","gl" to "BR"))
         YouTubeParser.page(YouTubeParser.initial(html),"search",YouTubeParser.context(html))
     }
+    override suspend fun shorts(query: String): Page<Video> = withContext(Dispatchers.Default) {
+        require(query.isNotBlank())
+        val q = if(query.contains("#shorts",ignoreCase=true)) query else "$query #shorts"
+        val html = request("results",mapOf("search_query" to q,"hl" to "pt","gl" to "BR"))
+        YouTubeParser.shortsPage(YouTubeParser.initial(html),"shorts",YouTubeParser.context(html))
+    }
+    /** Test diagnostics only (schema report). */
+    internal suspend fun rawForDiagnostics(path: String, query: Map<String,String>): String = request(path,query)
     override suspend fun next(cursor: Cursor): Page<Video> = withContext(Dispatchers.Default) {
-        require(cursor.endpoint in setOf("search","browse"))
+        require(cursor.endpoint in setOf("search","browse","shorts"))
         val context = YouTubeParser.parse(cursor.context)
         // Only a context received from the current public WEB page can be continued.
         val clientContext = context["client"] as? JsonObject
         if(clientContext?.let { YouTubeParser.string(it,"clientName") } != "WEB") throw CatalogException(CatalogException.Kind.BLOCKED,"Contexto público WEB indisponível para paginação.")
-        val response = request("youtubei/v1/${cursor.endpoint}",body=buildJsonObject {
+        val api = if(cursor.endpoint == "shorts") "search" else cursor.endpoint
+        val response = request("youtubei/v1/$api",body=buildJsonObject {
             put("context",context); put("continuation",cursor.token)
         })
-        val page = YouTubeParser.page(YouTubeParser.parse(response),cursor.endpoint,context)
+        val root = YouTubeParser.parse(response)
+        val page = if(cursor.endpoint == "shorts") YouTubeParser.shortsPage(root,"shorts",context) else YouTubeParser.page(root,cursor.endpoint,context)
         if(page.next?.token == cursor.token) throw YouTubeParser.schema()
         page
     }

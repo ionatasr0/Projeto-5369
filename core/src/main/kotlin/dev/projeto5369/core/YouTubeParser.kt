@@ -65,6 +65,36 @@ object YouTubeParser {
         val isShort = objects(obj).any { string(it,"url").startsWith("/shorts/") || it.containsKey("reelWatchEndpoint") }
         return Video(id,title,rows.firstOrNull().orEmpty(),channelId,duration,thumbnail,isShort=isShort)
     }
+    /** Shorts appear as shortsLockupViewModel / reelItemRenderer, or as regular renderers pointing at /shorts/. */
+    private fun shortsLockup(obj: JsonObject): Video? {
+        val id = objects(obj).mapNotNull { (it["reelWatchEndpoint"] as? JsonObject)?.let { r -> string(r,"videoId") } }
+            .firstOrNull { Regex("[A-Za-z0-9_-]{11}").matches(it) } ?: return null
+        val overlay = obj["overlayMetadata"] as? JsonObject
+        val title = (overlay?.get("primaryText") as? JsonObject)?.let { string(it,"content") }.orEmpty()
+            .ifBlank { string(obj,"accessibilityText").substringBefore(",").trim() }.ifBlank { return null }
+        val views = (overlay?.get("secondaryText") as? JsonObject)?.let { string(it,"content") }.orEmpty()
+        val thumbnail = objects(obj).map { string(it,"url") }.firstOrNull { it.startsWith("https://i.ytimg.com/") }
+            ?: "https://i.ytimg.com/vi/$id/oar2.jpg"
+        return Video(id,title,"",null,null,thumbnail,views,isShort=true)
+    }
+    private fun reel(obj: JsonObject): Video? {
+        val id = string(obj,"videoId").takeIf { Regex("[A-Za-z0-9_-]{11}").matches(it) } ?: return null
+        val title = text(obj["headline"]).ifBlank { return null }
+        val thumbnail = (obj["thumbnail"] as? JsonObject)?.get("thumbnails")?.let { it as? JsonArray }?.lastOrNull()?.let { it as? JsonObject }?.let { string(it,"url") }
+            ?: "https://i.ytimg.com/vi/$id/oar2.jpg"
+        return Video(id,title,"",null,null,thumbnail,text(obj["viewCountText"]),isShort=true)
+    }
+    fun shortsPage(root: JsonObject, endpoint: String, context: JsonObject?): Page<Video> {
+        val items = objects(root).mapNotNull { obj ->
+            (obj["shortsLockupViewModel"] as? JsonObject)?.let(::shortsLockup)
+                ?: (obj["reelItemRenderer"] as? JsonObject)?.let(::reel)
+                ?: ((obj["videoRenderer"] as? JsonObject)?.let(::renderer) ?: (obj["lockupViewModel"] as? JsonObject)?.let(::lockup))?.takeIf { it.isShort }
+        }.distinctBy { it.id }.toList()
+        val token = objects(root).mapNotNull { (it["continuationCommand"] as? JsonObject)?.let { cmd -> string(cmd,"token").takeIf(String::isNotBlank) } }.firstOrNull()
+        val recognized = objects(root).any { o -> o.keys.any { it in setOf("contents","onResponseReceivedCommands","onResponseReceivedActions","continuationContents") } }
+        if(items.isEmpty() && !recognized) throw schema()
+        return Page(items, if(token != null && context != null) Cursor(token,endpoint,context.toString()) else null)
+    }
     fun page(root: JsonObject, endpoint: String, context: JsonObject?): Page<Video> {
         // Exclude unselected channel tabs and unrelated watch recommendations at the caller.
         val items = objects(root).mapNotNull { obj ->

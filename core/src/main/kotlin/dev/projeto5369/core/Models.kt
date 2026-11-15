@@ -16,6 +16,8 @@ data class ChannelPage(val channel: Channel, val videos: Page<Video>)
 interface Catalog {
     suspend fun search(query: String): Page<Video>
     suspend fun next(cursor: Cursor): Page<Video>
+    /** Vertical short videos for the Shorts area (kept separate from the long-video catalog). */
+    suspend fun shorts(query: String): Page<Video>
     suspend fun video(id: String): Video
     suspend fun channel(id: String): ChannelPage
 }
