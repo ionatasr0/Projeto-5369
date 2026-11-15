@@ -1,0 +1,316 @@
+11-15 22:48:03.405   350   350 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
+11-15 22:48:04.687   350   350 D nativeloader: InitDefaultPublicLibraries for_preload=0: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libclang_rt.hwasan-aarch64-android.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
+11-15 22:48:04.715   350   350 D nativeloader: Load libwebviewchromium_loader.so using system ns (caller=/system/framework/framework.jar!classes4.dex): ok
+11-15 22:48:09.794   536   665 I ArtService: Dexopt result: [packageName = org.chromium.webview_shell] DexContainerFileDexoptResult{dexContainerFile=/product/app/Browser2/Browser2.apk, primaryAbi=true, abi=x86_64, actualCompilerFilter=verify, status=SKIPPED, dex2oatWallTimeMillis=0, dex2oatCpuTimeMillis=0, sizeBytes=0, sizeBeforeBytes=0, extendedStatusFlags=[]}
+11-15 22:48:11.504   883   883 V WebViewLibraryLoader: RelroFileCreator (64bit = true), package: com.android.webview library: libwebviewchromium.so
+11-15 22:48:11.758   912   912 D nativeloader: Load /product/app/webview/webview.apk!/lib/x86_64/libwebviewchromium.so using ns product-clns-7 from class loader (caller=/product/app/webview/webview.apk): ok
+11-15 22:48:11.813   536   945 I RoleControllerServiceImpl: Adding package as default/fallback role holder, package: org.chromium.webview_shell, role: android.app.role.BROWSER
+11-15 22:48:11.828   536   536 V StorageManagerService: Package org.chromium.webview_shell does not have legacy storage
+11-15 22:48:16.047   536  1364 D ShortcutService: Found updated package org.chromium.webview_shell updateTime=1794782886153
+11-15 22:48:16.047   536  1364 D ShortcutService: rescanPackageIfNeeded 0@org.chromium.webview_shell, forceRescan=true , isNewApp=true
+11-15 22:48:16.047   536  1364 D ShortcutService: Package org.chromium.webview_shell has 0 manifest shortcut(s), and 0 share target(s)
+11-15 22:48:20.591  1227  1251 I Launcher.IconCache: Database bulk icon loading failed, using fallback bulk icon loading for: ComponentInfo{org.chromium.webview_shell/org.chromium.webview_shell.WebViewBrowserActivity}
+11-15 22:48:21.777  1227  1251 I Launcher.IconCache: Database bulk icon loading failed, using fallback bulk icon loading for: ComponentInfo{org.chromium.webview_shell/org.chromium.webview_shell.WebViewBrowserActivity}
+11-15 22:48:37.862  2274  2274 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
+11-15 22:48:38.230   536   556 I AppsFilter: interaction: PackageSetting{c9da9bd dev.projeto5369/10148} -> PackageSetting{2c5b279 org.chromium.webview_shell/10103} BLOCKED
+11-15 22:48:38.241   536   556 I AppsFilter: interaction: PackageSetting{c9da9bd dev.projeto5369/10148} -> PackageSetting{2c5b279 org.chromium.webview_shell/10103} BLOCKED
+11-15 22:48:38.245   536   556 I AppsFilter: interaction: PackageSetting{c9da9bd dev.projeto5369/10148} -> PackageSetting{2c5b279 org.chromium.webview_shell/10103} BLOCKED
+11-15 22:48:38.488   536   556 I AppsFilter: interaction: PackageSetting{c9da9bd dev.projeto5369/10148} -> PackageSetting{2c5b279 org.chromium.webview_shell/10103} BLOCKED
+11-15 22:48:54.606   536   760 I AppsFilter: interaction: PackageSetting{c9da9bd dev.projeto5369/10148} -> PackageSetting{2c5b279 org.chromium.webview_shell/10103} BLOCKED
+11-15 22:48:54.620  2284  2284 I cr_WVCFactoryProvider: Loaded version=124.0.6367.219 minSdkVersion=1 isBundle=false multiprocess=true packageId=2
+11-15 22:48:54.622  2284  2284 D nativeloader: Load /product/app/webview/webview.apk!/lib/x86_64/libwebviewchromium.so using ns product-clns-10 from class loader (caller=/product/app/webview/webview.apk): ok
+11-15 22:48:54.623  2284  2284 D nativeloader: Load /system/lib64/libwebviewchromium_plat_support.so using ns product-clns-10 from class loader (caller=/product/app/webview/webview.apk): ok
+11-15 22:48:54.627  2284  2317 I chromium: [1115/224854.627103:INFO:variations_seed_loader.cc(66)] Failed to open file for reading.: No such file or directory (2)
+11-15 22:48:54.627  2284  2317 I cr_VariationsUtils: Failed reading seed file "/data/user/0/dev.projeto5369/app_webview/variations_seed_new"
+11-15 22:48:54.627  2284  2317 I chromium: [1115/224854.627329:INFO:variations_seed_loader.cc(66)] Failed to open file for reading.: No such file or directory (2)
+11-15 22:48:54.627  2284  2317 I cr_VariationsUtils: Failed reading seed file "/data/user/0/dev.projeto5369/app_webview/variations_seed"
+11-15 22:48:54.628  2284  2317 I cr_VariationsUtils: Requesting new seed from IVariationsSeedServer
+11-15 22:48:54.632  2284  2284 I cr_LibraryLoader: Successfully loaded native library
+11-15 22:48:54.632  2284  2284 I cr_CachingUmaRecorder: Flushed 6 samples from 6 histograms, 0 samples were dropped.
+11-15 22:48:54.635  2284  2284 I cr_CombinedPProvider: #registerProvider() provider:WV.o7@6c66c9c isPolicyCacheEnabled:false policyProvidersSize:0
+11-15 22:48:54.636  2284  2284 I cr_PolicyProvider: #setManagerAndSource() 0
+11-15 22:48:54.641   536   572 I ActivityManager: Start proc 2319:com.android.webview:webview_service/u0a113 for service {com.android.webview/org.chromium.android_webview.services.VariationsSeedServer}
+11-15 22:48:54.655  2284  2284 I cr_CombinedPProvider: #linkNativeInternal() 1
+11-15 22:48:54.656  2284  2284 I cr_AppResProvider: #getApplicationRestrictionsFromUserManager() Bundle[EMPTY_PARCEL]
+11-15 22:48:54.656  2284  2284 I cr_PolicyProvider: #notifySettingsAvailable() 0
+11-15 22:48:54.656  2284  2284 I cr_CombinedPProvider: #onSettingsAvailable() 0
+11-15 22:48:54.656  2284  2284 I cr_CombinedPProvider: #flushPolicies()
+11-15 22:48:54.667   536   572 I ActivityManager: Start proc 2323:com.android.webview:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:0/u0ai9000 for  {dev.projeto5369/org.chromium.content.app.SandboxedProcessService0:0}
+11-15 22:48:54.715  2323  2323 I cr_WebViewApkApp: Launched version=124.0.6367.219 minSdkVersion=1 isBundle=false processName=com.android.webview:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:0
+11-15 22:48:54.718  2319  2319 I cr_WebViewApkApp: Launched version=124.0.6367.219 minSdkVersion=1 isBundle=false processName=com.android.webview:webview_service
+11-15 22:48:54.730  2323  2323 I cr_ChildProcessService: Creating new ChildProcessService pid=2323
+11-15 22:48:54.761   536   572 I ActivityManager: Start proc 2364:com.android.webview:webview_apk/u0a113 for service {com.android.webview/org.chromium.android_webview.nonembedded.AwComponentUpdateService}
+11-15 22:48:54.781  2323  2358 I cr_LibraryLoader: Successfully loaded native library
+11-15 22:48:54.785  2323  2358 I cr_CachingUmaRecorder: Flushed 2 samples from 2 histograms, 0 samples were dropped.
+11-15 22:48:54.786  2284  2344 W cr_media: BLUETOOTH_CONNECT permission is missing.
+11-15 22:48:54.799  2284  2344 W cr_media: registerBluetoothIntentsIfNeeded: Requires BLUETOOTH permission
+11-15 22:48:54.809  2323  2358 W chromium: [WARNING:runtime_features.cc(694)] SharedStorage for M118+ cannot be enabled in this configuration. Use --enable-features=SharedStorageAPI,SharedStorageAPIM118 in addition.
+11-15 22:48:54.877  2364  2364 I cr_WebViewApkApp: Launched version=124.0.6367.219 minSdkVersion=1 isBundle=false processName=com.android.webview:webview_apk
+11-15 22:48:54.918  2319  2390 I cr_VariationsUtils: Scheduling seed download job
+11-15 22:48:54.939  2364  2364 D nativeloader: Load /product/app/webview/webview.apk!/lib/x86_64/libwebviewchromium.so using ns product-clns-7 from class loader (caller=/product/app/webview/webview.apk): ok
+11-15 22:48:54.951  2319  2356 I cr_VariationsUtils: Downloading new seed [fastMode=FALSE]
+11-15 22:48:54.961  2364  2364 I cr_LibraryLoader: Successfully loaded native library
+11-15 22:48:54.976  2284  2361 W chromium: [WARNING:display_webview.cc(32)] WebView overlays are enabled!
+11-15 22:48:55.073  2319  2356 I cr_VariationsSeedFetch: Fetched first run seed in 123 ms
+11-15 22:48:55.091  2364  2401 W cr_AWNetworkFetcherTask: IOException during downloadToFile.
+11-15 22:48:55.091  2364  2401 W cr_AWNetworkFetcherTask: java.io.IOException: Cleartext HTTP traffic to edgedl.me.gvt1.com not permitted
+11-15 22:48:55.091  2364  2401 W cr_AWNetworkFetcherTask: 	at com.android.okhttp.HttpHandler$CleartextURLFilter.checkURLPermitted(HttpHandler.java:127)
+11-15 22:48:55.091  2364  2401 W cr_AWNetworkFetcherTask: 	at com.android.okhttp.internal.huc.HttpURLConnectionImpl.execute(HttpURLConnectionImpl.java:462)
+11-15 22:48:55.091  2364  2401 W cr_AWNetworkFetcherTask: 	at com.android.okhttp.internal.huc.HttpURLConnectionImpl.getResponse(HttpURLConnectionImpl.java:411)
+11-15 22:48:55.091  2364  2401 W cr_AWNetworkFetcherTask: 	at com.android.okhttp.internal.huc.HttpURLConnectionImpl.getResponseCode(HttpURLConnectionImpl.java:542)
+11-15 22:48:55.091  2364  2401 W cr_AWNetworkFetcherTask: 	at org.chromium.android_webview.nonembedded.NetworkFetcherTask.download(chromium-SystemWebView.apk-default-636771907:56)
+11-15 22:48:55.591  2284  2297 I System.out: [render] probe -> 
+11-15 22:48:55.730  2284  2284 D P5369Player: console WARNING: Unrecognized feature: 'web-share'. @148
+11-15 22:48:56.377  2284  2369 D P5369Player: ready iframe=412x0 viewport=412x232 body=412x0
+11-15 22:48:56.377  2284  2369 D P5369Player: state 5
+11-15 22:48:56.408  2284  2284 D P5369Player: pageFinished view=1080x608 url=https://dev.projeto5369/
+11-15 22:48:56.557  2284  2344 W cr_media: Requires MODIFY_AUDIO_SETTINGS and RECORD_AUDIO. No audio device will be available for recording
+11-15 22:48:56.580  2284  2387 E cr_VideoCapture: getCameraCharacteristics: 
+11-15 22:48:56.580  2284  2387 E cr_VideoCapture: java.lang.IllegalArgumentException: getCameraCharacteristics:1329: Unable to retrieve camera characteristics for unknown device 0: No such file or directory (-2)
+11-15 22:48:56.580  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.utils.ExceptionUtils.throwAsPublicException(ExceptionUtils.java:66)
+11-15 22:48:56.580  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.CameraManager.getCameraCharacteristics(CameraManager.java:762)
+11-15 22:48:56.580  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.CameraManager.getCameraCharacteristics(CameraManager.java:712)
+11-15 22:48:56.580  2284  2387 E cr_VideoCapture: 	at WV.LO.m(chromium-SystemWebView.apk-default-636771907:15)
+11-15 22:48:56.580  2284  2387 E cr_VideoCapture: 	at org.chromium.media.VideoCaptureFactory.isLegacyOrDeprecatedDevice(chromium-SystemWebView.apk-default-636771907:1)
+11-15 22:48:56.580  2284  2387 E cr_VideoCapture: 	at org.chromium.media.VideoCaptureFactory.getDeviceName(chromium-SystemWebView.apk-default-636771907:1)
+11-15 22:48:56.580  2284  2387 E cr_VideoCapture: Caused by: android.os.ServiceSpecificException: getCameraCharacteristics:1329: Unable to retrieve camera characteristics for unknown device 0: No such file or directory (-2) (code 3)
+11-15 22:48:56.580  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.createExceptionOrNull(Parcel.java:3256)
+11-15 22:48:56.580  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.createException(Parcel.java:3226)
+11-15 22:48:56.580  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.readException(Parcel.java:3209)
+11-15 22:48:56.580  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.readException(Parcel.java:3151)
+11-15 22:48:56.580  2284  2387 E cr_VideoCapture: 	at android.hardware.ICameraService$Stub$Proxy.getCameraCharacteristics(ICameraService.java:1215)
+11-15 22:48:56.580  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.CameraManager.getCameraCharacteristics(CameraManager.java:757)
+11-15 22:48:56.580  2284  2387 E cr_VideoCapture: 	... 4 more
+11-15 22:48:56.582  2284  2365 E chromium: [ERROR:context_group.cc(146)] ContextResult::kFatalFailure: WebGL1 blocklisted
+11-15 22:48:56.589  2284  2387 E cr_VideoCapture: getCameraCharacteristics: 
+11-15 22:48:56.589  2284  2387 E cr_VideoCapture: java.lang.IllegalArgumentException: getCameraCharacteristics:1329: Unable to retrieve camera characteristics for unknown device 0: No such file or directory (-2)
+11-15 22:48:56.589  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.utils.ExceptionUtils.throwAsPublicException(ExceptionUtils.java:66)
+11-15 22:48:56.589  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.CameraManager.getCameraCharacteristics(CameraManager.java:762)
+11-15 22:48:56.589  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.CameraManager.getCameraCharacteristics(CameraManager.java:712)
+11-15 22:48:56.589  2284  2387 E cr_VideoCapture: 	at WV.LO.m(chromium-SystemWebView.apk-default-636771907:15)
+11-15 22:48:56.589  2284  2387 E cr_VideoCapture: 	at org.chromium.media.VideoCaptureFactory.isLegacyOrDeprecatedDevice(chromium-SystemWebView.apk-default-636771907:1)
+11-15 22:48:56.589  2284  2387 E cr_VideoCapture: 	at org.chromium.media.VideoCaptureFactory.getDeviceId(chromium-SystemWebView.apk-default-636771907:1)
+11-15 22:48:56.589  2284  2387 E cr_VideoCapture: Caused by: android.os.ServiceSpecificException: getCameraCharacteristics:1329: Unable to retrieve camera characteristics for unknown device 0: No such file or directory (-2) (code 3)
+11-15 22:48:56.589  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.createExceptionOrNull(Parcel.java:3256)
+11-15 22:48:56.589  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.createException(Parcel.java:3226)
+11-15 22:48:56.589  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.readException(Parcel.java:3209)
+11-15 22:48:56.589  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.readException(Parcel.java:3151)
+11-15 22:48:56.589  2284  2387 E cr_VideoCapture: 	at android.hardware.ICameraService$Stub$Proxy.getCameraCharacteristics(ICameraService.java:1215)
+11-15 22:48:56.589  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.CameraManager.getCameraCharacteristics(CameraManager.java:757)
+11-15 22:48:56.589  2284  2387 E cr_VideoCapture: 	... 4 more
+11-15 22:48:56.600  2284  2387 E cr_VideoCapture: getCameraCharacteristics: 
+11-15 22:48:56.600  2284  2387 E cr_VideoCapture: java.lang.IllegalArgumentException: getCameraCharacteristics:1329: Unable to retrieve camera characteristics for unknown device 0: No such file or directory (-2)
+11-15 22:48:56.600  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.utils.ExceptionUtils.throwAsPublicException(ExceptionUtils.java:66)
+11-15 22:48:56.600  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.CameraManager.getCameraCharacteristics(CameraManager.java:762)
+11-15 22:48:56.600  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.CameraManager.getCameraCharacteristics(CameraManager.java:712)
+11-15 22:48:56.600  2284  2387 E cr_VideoCapture: 	at WV.LO.m(chromium-SystemWebView.apk-default-636771907:15)
+11-15 22:48:56.600  2284  2387 E cr_VideoCapture: 	at org.chromium.media.VideoCaptureFactory.isLegacyOrDeprecatedDevice(chromium-SystemWebView.apk-default-636771907:1)
+11-15 22:48:56.600  2284  2387 E cr_VideoCapture: 	at org.chromium.media.VideoCaptureFactory.getCaptureApiType(chromium-SystemWebView.apk-default-636771907:1)
+11-15 22:48:56.600  2284  2387 E cr_VideoCapture: Caused by: android.os.ServiceSpecificException: getCameraCharacteristics:1329: Unable to retrieve camera characteristics for unknown device 0: No such file or directory (-2) (code 3)
+11-15 22:48:56.600  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.createExceptionOrNull(Parcel.java:3256)
+11-15 22:48:56.600  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.createException(Parcel.java:3226)
+11-15 22:48:56.600  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.readException(Parcel.java:3209)
+11-15 22:48:56.600  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.readException(Parcel.java:3151)
+11-15 22:48:56.600  2284  2387 E cr_VideoCapture: 	at android.hardware.ICameraService$Stub$Proxy.getCameraCharacteristics(ICameraService.java:1215)
+11-15 22:48:56.600  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.CameraManager.getCameraCharacteristics(CameraManager.java:757)
+11-15 22:48:56.600  2284  2387 E cr_VideoCapture: 	... 4 more
+11-15 22:48:56.616  2284  2387 E cr_VideoCapture: getCameraCharacteristics: 
+11-15 22:48:56.616  2284  2387 E cr_VideoCapture: java.lang.IllegalArgumentException: getCameraCharacteristics:1329: Unable to retrieve camera characteristics for unknown device 0: No such file or directory (-2)
+11-15 22:48:56.616  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.utils.ExceptionUtils.throwAsPublicException(ExceptionUtils.java:66)
+11-15 22:48:56.616  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.CameraManager.getCameraCharacteristics(CameraManager.java:762)
+11-15 22:48:56.616  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.CameraManager.getCameraCharacteristics(CameraManager.java:712)
+11-15 22:48:56.616  2284  2387 E cr_VideoCapture: 	at WV.LO.m(chromium-SystemWebView.apk-default-636771907:15)
+11-15 22:48:56.616  2284  2387 E cr_VideoCapture: 	at org.chromium.media.VideoCaptureFactory.isLegacyOrDeprecatedDevice(chromium-SystemWebView.apk-default-636771907:1)
+11-15 22:48:56.616  2284  2387 E cr_VideoCapture: 	at org.chromium.media.VideoCaptureFactory.getFacingMode(chromium-SystemWebView.apk-default-636771907:1)
+11-15 22:48:56.616  2284  2387 E cr_VideoCapture: Caused by: android.os.ServiceSpecificException: getCameraCharacteristics:1329: Unable to retrieve camera characteristics for unknown device 0: No such file or directory (-2) (code 3)
+11-15 22:48:56.616  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.createExceptionOrNull(Parcel.java:3256)
+11-15 22:48:56.616  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.createException(Parcel.java:3226)
+11-15 22:48:56.616  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.readException(Parcel.java:3209)
+11-15 22:48:56.616  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.readException(Parcel.java:3151)
+11-15 22:48:56.616  2284  2387 E cr_VideoCapture: 	at android.hardware.ICameraService$Stub$Proxy.getCameraCharacteristics(ICameraService.java:1215)
+11-15 22:48:56.616  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.CameraManager.getCameraCharacteristics(CameraManager.java:757)
+11-15 22:48:56.616  2284  2387 E cr_VideoCapture: 	... 4 more
+11-15 22:48:56.631  2284  2387 E cr_VideoCapture: getCameraCharacteristics: 
+11-15 22:48:56.631  2284  2387 E cr_VideoCapture: java.lang.IllegalArgumentException: getCameraCharacteristics:1329: Unable to retrieve camera characteristics for unknown device 0: No such file or directory (-2)
+11-15 22:48:56.631  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.utils.ExceptionUtils.throwAsPublicException(ExceptionUtils.java:66)
+11-15 22:48:56.631  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.CameraManager.getCameraCharacteristics(CameraManager.java:762)
+11-15 22:48:56.631  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.CameraManager.getCameraCharacteristics(CameraManager.java:712)
+11-15 22:48:56.631  2284  2387 E cr_VideoCapture: 	at WV.LO.m(chromium-SystemWebView.apk-default-636771907:15)
+11-15 22:48:56.631  2284  2387 E cr_VideoCapture: 	at org.chromium.media.VideoCaptureFactory.isLegacyOrDeprecatedDevice(chromium-SystemWebView.apk-default-636771907:1)
+11-15 22:48:56.631  2284  2387 E cr_VideoCapture: 	at org.chromium.media.VideoCaptureFactory.isZoomSupported(chromium-SystemWebView.apk-default-636771907:1)
+11-15 22:48:56.631  2284  2387 E cr_VideoCapture: Caused by: android.os.ServiceSpecificException: getCameraCharacteristics:1329: Unable to retrieve camera characteristics for unknown device 0: No such file or directory (-2) (code 3)
+11-15 22:48:56.631  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.createExceptionOrNull(Parcel.java:3256)
+11-15 22:48:56.631  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.createException(Parcel.java:3226)
+11-15 22:48:56.631  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.readException(Parcel.java:3209)
+11-15 22:48:56.631  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.readException(Parcel.java:3151)
+11-15 22:48:56.631  2284  2387 E cr_VideoCapture: 	at android.hardware.ICameraService$Stub$Proxy.getCameraCharacteristics(ICameraService.java:1215)
+11-15 22:48:56.631  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.CameraManager.getCameraCharacteristics(CameraManager.java:757)
+11-15 22:48:56.631  2284  2387 E cr_VideoCapture: 	... 4 more
+11-15 22:48:56.633  2284  2387 E cr_VideoCapture: getCameraCharacteristics: 
+11-15 22:48:56.633  2284  2387 E cr_VideoCapture: java.lang.IllegalArgumentException: getCameraCharacteristics:1329: Unable to retrieve camera characteristics for unknown device 0: No such file or directory (-2)
+11-15 22:48:56.633  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.utils.ExceptionUtils.throwAsPublicException(ExceptionUtils.java:66)
+11-15 22:48:56.633  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.CameraManager.getCameraCharacteristics(CameraManager.java:762)
+11-15 22:48:56.633  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.CameraManager.getCameraCharacteristics(CameraManager.java:712)
+11-15 22:48:56.633  2284  2387 E cr_VideoCapture: 	at WV.LO.m(chromium-SystemWebView.apk-default-636771907:15)
+11-15 22:48:56.633  2284  2387 E cr_VideoCapture: 	at org.chromium.media.VideoCaptureFactory.isLegacyOrDeprecatedDevice(chromium-SystemWebView.apk-default-636771907:1)
+11-15 22:48:56.633  2284  2387 E cr_VideoCapture: 	at org.chromium.media.VideoCaptureFactory.getDeviceSupportedFormats(chromium-SystemWebView.apk-default-636771907:1)
+11-15 22:48:56.633  2284  2387 E cr_VideoCapture: Caused by: android.os.ServiceSpecificException: getCameraCharacteristics:1329: Unable to retrieve camera characteristics for unknown device 0: No such file or directory (-2) (code 3)
+11-15 22:48:56.633  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.createExceptionOrNull(Parcel.java:3256)
+11-15 22:48:56.633  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.createException(Parcel.java:3226)
+11-15 22:48:56.633  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.readException(Parcel.java:3209)
+11-15 22:48:56.633  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.readException(Parcel.java:3151)
+11-15 22:48:56.633  2284  2387 E cr_VideoCapture: 	at android.hardware.ICameraService$Stub$Proxy.getCameraCharacteristics(ICameraService.java:1215)
+11-15 22:48:56.633  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.CameraManager.getCameraCharacteristics(CameraManager.java:757)
+11-15 22:48:56.633  2284  2387 E cr_VideoCapture: 	... 4 more
+11-15 22:48:56.744  2284  2284 D P5369Player: console WARNING: Failed to create WebGPU Context Provider @1
+11-15 22:49:10.851  2284  2361 W chromium: [WARNING:display_webview.cc(32)] WebView overlays are enabled!
+11-15 22:49:11.040  2284  2297 I System.out: [render] iframeapi -> ready iframe=412x0 viewport=412x232 body=412x0
+11-15 22:49:11.055  2284  2284 D P5369Player: console WARNING: Unrecognized feature: 'web-share'. @148
+11-15 22:49:11.374  2284  2369 D P5369Player: ready iframe=412x0 viewport=412x232 body=412x0
+11-15 22:49:11.375  2284  2369 D P5369Player: state 5
+11-15 22:49:11.443  2284  2284 D P5369Player: pageFinished view=1080x608 url=https://dev.projeto5369/
+11-15 22:49:11.598  2284  2344 W cr_media: Requires MODIFY_AUDIO_SETTINGS and RECORD_AUDIO. No audio device will be available for recording
+11-15 22:49:11.598  2284  2387 E cr_VideoCapture: getCameraCharacteristics: 
+11-15 22:49:11.598  2284  2387 E cr_VideoCapture: java.lang.IllegalArgumentException: getCameraCharacteristics:1329: Unable to retrieve camera characteristics for unknown device 0: No such file or directory (-2)
+11-15 22:49:11.598  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.utils.ExceptionUtils.throwAsPublicException(ExceptionUtils.java:66)
+11-15 22:49:11.598  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.CameraManager.getCameraCharacteristics(CameraManager.java:762)
+11-15 22:49:11.598  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.CameraManager.getCameraCharacteristics(CameraManager.java:712)
+11-15 22:49:11.598  2284  2387 E cr_VideoCapture: 	at WV.LO.m(chromium-SystemWebView.apk-default-636771907:15)
+11-15 22:49:11.598  2284  2387 E cr_VideoCapture: 	at org.chromium.media.VideoCaptureFactory.isLegacyOrDeprecatedDevice(chromium-SystemWebView.apk-default-636771907:1)
+11-15 22:49:11.598  2284  2387 E cr_VideoCapture: 	at org.chromium.media.VideoCaptureFactory.getDeviceName(chromium-SystemWebView.apk-default-636771907:1)
+11-15 22:49:11.598  2284  2387 E cr_VideoCapture: Caused by: android.os.ServiceSpecificException: getCameraCharacteristics:1329: Unable to retrieve camera characteristics for unknown device 0: No such file or directory (-2) (code 3)
+11-15 22:49:11.598  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.createExceptionOrNull(Parcel.java:3256)
+11-15 22:49:11.598  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.createException(Parcel.java:3226)
+11-15 22:49:11.598  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.readException(Parcel.java:3209)
+11-15 22:49:11.598  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.readException(Parcel.java:3151)
+11-15 22:49:11.598  2284  2387 E cr_VideoCapture: 	at android.hardware.ICameraService$Stub$Proxy.getCameraCharacteristics(ICameraService.java:1215)
+11-15 22:49:11.598  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.CameraManager.getCameraCharacteristics(CameraManager.java:757)
+11-15 22:49:11.598  2284  2387 E cr_VideoCapture: 	... 4 more
+11-15 22:49:11.599  2284  2387 E cr_VideoCapture: getCameraCharacteristics: 
+11-15 22:49:11.599  2284  2387 E cr_VideoCapture: java.lang.IllegalArgumentException: getCameraCharacteristics:1329: Unable to retrieve camera characteristics for unknown device 0: No such file or directory (-2)
+11-15 22:49:11.599  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.utils.ExceptionUtils.throwAsPublicException(ExceptionUtils.java:66)
+11-15 22:49:11.599  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.CameraManager.getCameraCharacteristics(CameraManager.java:762)
+11-15 22:49:11.599  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.CameraManager.getCameraCharacteristics(CameraManager.java:712)
+11-15 22:49:11.599  2284  2387 E cr_VideoCapture: 	at WV.LO.m(chromium-SystemWebView.apk-default-636771907:15)
+11-15 22:49:11.599  2284  2387 E cr_VideoCapture: 	at org.chromium.media.VideoCaptureFactory.isLegacyOrDeprecatedDevice(chromium-SystemWebView.apk-default-636771907:1)
+11-15 22:49:11.599  2284  2387 E cr_VideoCapture: 	at org.chromium.media.VideoCaptureFactory.getDeviceId(chromium-SystemWebView.apk-default-636771907:1)
+11-15 22:49:11.599  2284  2387 E cr_VideoCapture: Caused by: android.os.ServiceSpecificException: getCameraCharacteristics:1329: Unable to retrieve camera characteristics for unknown device 0: No such file or directory (-2) (code 3)
+11-15 22:49:11.599  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.createExceptionOrNull(Parcel.java:3256)
+11-15 22:49:11.599  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.createException(Parcel.java:3226)
+11-15 22:49:11.599  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.readException(Parcel.java:3209)
+11-15 22:49:11.599  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.readException(Parcel.java:3151)
+11-15 22:49:11.599  2284  2387 E cr_VideoCapture: 	at android.hardware.ICameraService$Stub$Proxy.getCameraCharacteristics(ICameraService.java:1215)
+11-15 22:49:11.599  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.CameraManager.getCameraCharacteristics(CameraManager.java:757)
+11-15 22:49:11.599  2284  2387 E cr_VideoCapture: 	... 4 more
+11-15 22:49:11.601  2284  2365 E chromium: [ERROR:context_group.cc(146)] ContextResult::kFatalFailure: WebGL1 blocklisted
+11-15 22:49:11.604  2284  2387 E cr_VideoCapture: getCameraCharacteristics: 
+11-15 22:49:11.604  2284  2387 E cr_VideoCapture: java.lang.IllegalArgumentException: getCameraCharacteristics:1329: Unable to retrieve camera characteristics for unknown device 0: No such file or directory (-2)
+11-15 22:49:11.604  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.utils.ExceptionUtils.throwAsPublicException(ExceptionUtils.java:66)
+11-15 22:49:11.604  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.CameraManager.getCameraCharacteristics(CameraManager.java:762)
+11-15 22:49:11.604  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.CameraManager.getCameraCharacteristics(CameraManager.java:712)
+11-15 22:49:11.604  2284  2387 E cr_VideoCapture: 	at WV.LO.m(chromium-SystemWebView.apk-default-636771907:15)
+11-15 22:49:11.604  2284  2387 E cr_VideoCapture: 	at org.chromium.media.VideoCaptureFactory.isLegacyOrDeprecatedDevice(chromium-SystemWebView.apk-default-636771907:1)
+11-15 22:49:11.604  2284  2387 E cr_VideoCapture: 	at org.chromium.media.VideoCaptureFactory.getCaptureApiType(chromium-SystemWebView.apk-default-636771907:1)
+11-15 22:49:11.604  2284  2387 E cr_VideoCapture: Caused by: android.os.ServiceSpecificException: getCameraCharacteristics:1329: Unable to retrieve camera characteristics for unknown device 0: No such file or directory (-2) (code 3)
+11-15 22:49:11.604  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.createExceptionOrNull(Parcel.java:3256)
+11-15 22:49:11.604  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.createException(Parcel.java:3226)
+11-15 22:49:11.604  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.readException(Parcel.java:3209)
+11-15 22:49:11.604  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.readException(Parcel.java:3151)
+11-15 22:49:11.604  2284  2387 E cr_VideoCapture: 	at android.hardware.ICameraService$Stub$Proxy.getCameraCharacteristics(ICameraService.java:1215)
+11-15 22:49:11.604  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.CameraManager.getCameraCharacteristics(CameraManager.java:757)
+11-15 22:49:11.604  2284  2387 E cr_VideoCapture: 	... 4 more
+11-15 22:49:11.607  2284  2387 E cr_VideoCapture: getCameraCharacteristics: 
+11-15 22:49:11.607  2284  2387 E cr_VideoCapture: java.lang.IllegalArgumentException: getCameraCharacteristics:1329: Unable to retrieve camera characteristics for unknown device 0: No such file or directory (-2)
+11-15 22:49:11.607  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.utils.ExceptionUtils.throwAsPublicException(ExceptionUtils.java:66)
+11-15 22:49:11.607  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.CameraManager.getCameraCharacteristics(CameraManager.java:762)
+11-15 22:49:11.607  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.CameraManager.getCameraCharacteristics(CameraManager.java:712)
+11-15 22:49:11.607  2284  2387 E cr_VideoCapture: 	at WV.LO.m(chromium-SystemWebView.apk-default-636771907:15)
+11-15 22:49:11.607  2284  2387 E cr_VideoCapture: 	at org.chromium.media.VideoCaptureFactory.isLegacyOrDeprecatedDevice(chromium-SystemWebView.apk-default-636771907:1)
+11-15 22:49:11.607  2284  2387 E cr_VideoCapture: 	at org.chromium.media.VideoCaptureFactory.getFacingMode(chromium-SystemWebView.apk-default-636771907:1)
+11-15 22:49:11.607  2284  2387 E cr_VideoCapture: Caused by: android.os.ServiceSpecificException: getCameraCharacteristics:1329: Unable to retrieve camera characteristics for unknown device 0: No such file or directory (-2) (code 3)
+11-15 22:49:11.607  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.createExceptionOrNull(Parcel.java:3256)
+11-15 22:49:11.607  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.createException(Parcel.java:3226)
+11-15 22:49:11.607  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.readException(Parcel.java:3209)
+11-15 22:49:11.607  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.readException(Parcel.java:3151)
+11-15 22:49:11.607  2284  2387 E cr_VideoCapture: 	at android.hardware.ICameraService$Stub$Proxy.getCameraCharacteristics(ICameraService.java:1215)
+11-15 22:49:11.607  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.CameraManager.getCameraCharacteristics(CameraManager.java:757)
+11-15 22:49:11.607  2284  2387 E cr_VideoCapture: 	... 4 more
+11-15 22:49:11.619  2284  2284 D P5369Player: console WARNING: Failed to create WebGPU Context Provider @1
+11-15 22:49:26.242  2284  2297 I System.out: [render] software -> ready iframe=412x0 viewport=412x232 body=412x0
+11-15 22:49:26.243  2284  2284 D P5369Player: console WARNING: Unrecognized feature: 'web-share'. @148
+11-15 22:49:26.484  2284  2369 D P5369Player: ready iframe=412x0 viewport=412x232 body=412x0
+11-15 22:49:26.486  2284  2369 D P5369Player: state 5
+11-15 22:49:26.568  2284  2284 D P5369Player: pageFinished view=1080x608 url=https://dev.projeto5369/
+11-15 22:49:26.643  2284  2344 W cr_media: Requires MODIFY_AUDIO_SETTINGS and RECORD_AUDIO. No audio device will be available for recording
+11-15 22:49:26.647  2284  2387 E cr_VideoCapture: getCameraCharacteristics: 
+11-15 22:49:26.647  2284  2387 E cr_VideoCapture: java.lang.IllegalArgumentException: getCameraCharacteristics:1329: Unable to retrieve camera characteristics for unknown device 0: No such file or directory (-2)
+11-15 22:49:26.647  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.utils.ExceptionUtils.throwAsPublicException(ExceptionUtils.java:66)
+11-15 22:49:26.647  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.CameraManager.getCameraCharacteristics(CameraManager.java:762)
+11-15 22:49:26.647  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.CameraManager.getCameraCharacteristics(CameraManager.java:712)
+11-15 22:49:26.647  2284  2387 E cr_VideoCapture: 	at WV.LO.m(chromium-SystemWebView.apk-default-636771907:15)
+11-15 22:49:26.647  2284  2387 E cr_VideoCapture: 	at org.chromium.media.VideoCaptureFactory.isLegacyOrDeprecatedDevice(chromium-SystemWebView.apk-default-636771907:1)
+11-15 22:49:26.647  2284  2387 E cr_VideoCapture: 	at org.chromium.media.VideoCaptureFactory.getDeviceName(chromium-SystemWebView.apk-default-636771907:1)
+11-15 22:49:26.647  2284  2387 E cr_VideoCapture: Caused by: android.os.ServiceSpecificException: getCameraCharacteristics:1329: Unable to retrieve camera characteristics for unknown device 0: No such file or directory (-2) (code 3)
+11-15 22:49:26.647  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.createExceptionOrNull(Parcel.java:3256)
+11-15 22:49:26.647  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.createException(Parcel.java:3226)
+11-15 22:49:26.647  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.readException(Parcel.java:3209)
+11-15 22:49:26.647  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.readException(Parcel.java:3151)
+11-15 22:49:26.647  2284  2387 E cr_VideoCapture: 	at android.hardware.ICameraService$Stub$Proxy.getCameraCharacteristics(ICameraService.java:1215)
+11-15 22:49:26.647  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.CameraManager.getCameraCharacteristics(CameraManager.java:757)
+11-15 22:49:26.647  2284  2387 E cr_VideoCapture: 	... 4 more
+11-15 22:49:26.651  2284  2387 E cr_VideoCapture: getCameraCharacteristics: 
+11-15 22:49:26.651  2284  2387 E cr_VideoCapture: java.lang.IllegalArgumentException: getCameraCharacteristics:1329: Unable to retrieve camera characteristics for unknown device 0: No such file or directory (-2)
+11-15 22:49:26.651  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.utils.ExceptionUtils.throwAsPublicException(ExceptionUtils.java:66)
+11-15 22:49:26.651  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.CameraManager.getCameraCharacteristics(CameraManager.java:762)
+11-15 22:49:26.651  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.CameraManager.getCameraCharacteristics(CameraManager.java:712)
+11-15 22:49:26.651  2284  2387 E cr_VideoCapture: 	at WV.LO.m(chromium-SystemWebView.apk-default-636771907:15)
+11-15 22:49:26.651  2284  2387 E cr_VideoCapture: 	at org.chromium.media.VideoCaptureFactory.isLegacyOrDeprecatedDevice(chromium-SystemWebView.apk-default-636771907:1)
+11-15 22:49:26.651  2284  2387 E cr_VideoCapture: 	at org.chromium.media.VideoCaptureFactory.getDeviceId(chromium-SystemWebView.apk-default-636771907:1)
+11-15 22:49:26.651  2284  2387 E cr_VideoCapture: Caused by: android.os.ServiceSpecificException: getCameraCharacteristics:1329: Unable to retrieve camera characteristics for unknown device 0: No such file or directory (-2) (code 3)
+11-15 22:49:26.651  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.createExceptionOrNull(Parcel.java:3256)
+11-15 22:49:26.651  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.createException(Parcel.java:3226)
+11-15 22:49:26.651  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.readException(Parcel.java:3209)
+11-15 22:49:26.651  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.readException(Parcel.java:3151)
+11-15 22:49:26.651  2284  2387 E cr_VideoCapture: 	at android.hardware.ICameraService$Stub$Proxy.getCameraCharacteristics(ICameraService.java:1215)
+11-15 22:49:26.651  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.CameraManager.getCameraCharacteristics(CameraManager.java:757)
+11-15 22:49:26.651  2284  2387 E cr_VideoCapture: 	... 4 more
+11-15 22:49:26.657  2284  2387 E cr_VideoCapture: getCameraCharacteristics: 
+11-15 22:49:26.657  2284  2387 E cr_VideoCapture: java.lang.IllegalArgumentException: getCameraCharacteristics:1329: Unable to retrieve camera characteristics for unknown device 0: No such file or directory (-2)
+11-15 22:49:26.657  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.utils.ExceptionUtils.throwAsPublicException(ExceptionUtils.java:66)
+11-15 22:49:26.657  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.CameraManager.getCameraCharacteristics(CameraManager.java:762)
+11-15 22:49:26.657  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.CameraManager.getCameraCharacteristics(CameraManager.java:712)
+11-15 22:49:26.657  2284  2387 E cr_VideoCapture: 	at WV.LO.m(chromium-SystemWebView.apk-default-636771907:15)
+11-15 22:49:26.657  2284  2387 E cr_VideoCapture: 	at org.chromium.media.VideoCaptureFactory.isLegacyOrDeprecatedDevice(chromium-SystemWebView.apk-default-636771907:1)
+11-15 22:49:26.657  2284  2387 E cr_VideoCapture: 	at org.chromium.media.VideoCaptureFactory.getCaptureApiType(chromium-SystemWebView.apk-default-636771907:1)
+11-15 22:49:26.657  2284  2387 E cr_VideoCapture: Caused by: android.os.ServiceSpecificException: getCameraCharacteristics:1329: Unable to retrieve camera characteristics for unknown device 0: No such file or directory (-2) (code 3)
+11-15 22:49:26.657  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.createExceptionOrNull(Parcel.java:3256)
+11-15 22:49:26.657  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.createException(Parcel.java:3226)
+11-15 22:49:26.657  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.readException(Parcel.java:3209)
+11-15 22:49:26.657  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.readException(Parcel.java:3151)
+11-15 22:49:26.657  2284  2387 E cr_VideoCapture: 	at android.hardware.ICameraService$Stub$Proxy.getCameraCharacteristics(ICameraService.java:1215)
+11-15 22:49:26.657  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.CameraManager.getCameraCharacteristics(CameraManager.java:757)
+11-15 22:49:26.657  2284  2387 E cr_VideoCapture: 	... 4 more
+11-15 22:49:26.659  2284  2365 E chromium: [ERROR:context_group.cc(146)] ContextResult::kFatalFailure: WebGL1 blocklisted
+11-15 22:49:26.660  2284  2387 E cr_VideoCapture: getCameraCharacteristics: 
+11-15 22:49:26.660  2284  2387 E cr_VideoCapture: java.lang.IllegalArgumentException: getCameraCharacteristics:1329: Unable to retrieve camera characteristics for unknown device 0: No such file or directory (-2)
+11-15 22:49:26.660  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.utils.ExceptionUtils.throwAsPublicException(ExceptionUtils.java:66)
+11-15 22:49:26.660  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.CameraManager.getCameraCharacteristics(CameraManager.java:762)
+11-15 22:49:26.660  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.CameraManager.getCameraCharacteristics(CameraManager.java:712)
+11-15 22:49:26.660  2284  2387 E cr_VideoCapture: 	at WV.LO.m(chromium-SystemWebView.apk-default-636771907:15)
+11-15 22:49:26.660  2284  2387 E cr_VideoCapture: 	at org.chromium.media.VideoCaptureFactory.isLegacyOrDeprecatedDevice(chromium-SystemWebView.apk-default-636771907:1)
+11-15 22:49:26.660  2284  2387 E cr_VideoCapture: 	at org.chromium.media.VideoCaptureFactory.getFacingMode(chromium-SystemWebView.apk-default-636771907:1)
+11-15 22:49:26.660  2284  2387 E cr_VideoCapture: Caused by: android.os.ServiceSpecificException: getCameraCharacteristics:1329: Unable to retrieve camera characteristics for unknown device 0: No such file or directory (-2) (code 3)
+11-15 22:49:26.660  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.createExceptionOrNull(Parcel.java:3256)
+11-15 22:49:26.660  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.createException(Parcel.java:3226)
+11-15 22:49:26.660  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.readException(Parcel.java:3209)
+11-15 22:49:26.660  2284  2387 E cr_VideoCapture: 	at android.os.Parcel.readException(Parcel.java:3151)
+11-15 22:49:26.660  2284  2387 E cr_VideoCapture: 	at android.hardware.ICameraService$Stub$Proxy.getCameraCharacteristics(ICameraService.java:1215)
+11-15 22:49:26.660  2284  2387 E cr_VideoCapture: 	at android.hardware.camera2.CameraManager.getCameraCharacteristics(CameraManager.java:757)
+11-15 22:49:26.660  2284  2387 E cr_VideoCapture: 	... 4 more
+11-15 22:49:26.728  2284  2284 D P5369Player: console WARNING: Failed to create WebGPU Context Provider @1
+11-15 22:49:41.305  2284  2361 W chromium: [WARNING:display_webview.cc(32)] WebView overlays are enabled!
+11-15 22:49:41.515  2284  2297 I System.out: [render] embedurl -> ready iframe=412x0 viewport=412x232 body=412x0
+11-15 22:49:41.712   536  1808 I AppsFilter: interaction: PackageSetting{6f11fc dev.projeto5369.test/10149} -> PackageSetting{2c5b279 org.chromium.webview_shell/10103} BLOCKED
+11-15 22:49:41.731   536  1808 I AppsFilter: interaction: PackageSetting{6f11fc dev.projeto5369.test/10149} -> PackageSetting{2c5b279 org.chromium.webview_shell/10103} BLOCKED
+11-15 22:49:42.003  2284  2284 E chromium: [ERROR:aw_browser_terminator.cc(154)] Renderer process (2323) crash detected (code -1).
+11-15 22:49:42.031   536   928 I ActivityManager: Killing 2323:com.android.webview:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:0/u0a148i0 (adj 0): isolated not needed

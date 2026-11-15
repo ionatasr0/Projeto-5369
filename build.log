@@ -1,0 +1,154 @@
+Starting a Gradle Daemon (subsequent builds will be faster)
+> Task :core:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :core:processResources NO-SOURCE
+> Task :core:processTestResources
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:generateDebugBuildConfig
+> Task :app:checkDebugAarMetadata
+> Task :app:generateDebugResValues
+> Task :app:mapDebugSourceSetPaths
+> Task :app:generateDebugResources
+> Task :app:mergeDebugResources
+> Task :app:packageDebugResources
+> Task :app:parseDebugLocalResources
+> Task :app:createDebugCompatibleScreenManifests
+> Task :app:extractDeepLinksDebug
+> Task :app:processDebugMainManifest
+> Task :app:processDebugManifest
+> Task :app:processDebugManifestForPackage
+> Task :app:processDebugResources
+> Task :app:javaPreCompileDebug
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:javaPreCompileDebugUnitTest
+> Task :app:mergeDebugShaders
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets
+> Task :app:packageDebugUnitTestForUnitTest
+> Task :app:generateDebugUnitTestConfig
+> Task :app:preDebugAndroidTestBuild SKIPPED
+> Task :app:generateDebugAndroidTestResValues
+> Task :app:extractProguardFiles
+> Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :app:compressDebugAssets
+> Task :app:desugarDebugFileDependencies
+> Task :app:checkDebugDuplicateClasses
+> Task :core:compileKotlin
+> Task :core:compileJava NO-SOURCE
+> Task :core:classes UP-TO-DATE
+> Task :core:jar
+> Task :app:mergeExtDexDebug
+> Task :core:compileTestKotlin
+> Task :core:compileTestJava NO-SOURCE
+> Task :core:testClasses
+
+> Task :core:test
+
+CatalogTest > detailsFallBackToOEmbedWhenWatchPageHasNoDetails PASSED
+
+CatalogTest > extractsEmbeddedJsonWithEscapedStrings PASSED
+
+CatalogTest > rejectsOversizedResponse PASSED
+
+CatalogTest > searchAndContinuationUseCurrentPublicContext PASSED
+
+CatalogTest > validatesDurationsAndLinks PASSED
+
+CatalogTest > readsVideoDetailsAndSelectedChannelTab PASSED
+
+CatalogTest > refusesRepeatedContinuationToken PASSED
+
+CatalogTest > rejectsUnsupportedClients PASSED
+
+CatalogTest > userAgentDoesNotTriggerMobileRedirect PASSED
+
+CatalogTest > handlesRateLimitAndAuthorizationWithoutRetry PASSED
+
+CatalogTest > mapsOfficialPlayerEvents PASSED
+
+CatalogTest > parsesModernChannelLockup PASSED
+
+CatalogTest > roundTripsPersistentModel PASSED
+
+CatalogTest > cancelsNetworkRequest STANDARD_ERROR
+    Nov 15, 2026 10:47:17 PM okhttp3.mockwebserver.MockWebServer$SocketHandler handle
+    WARNING: MockWebServer[60209] connection from /127.0.0.1 didn't make a request
+
+CatalogTest > cancelsNetworkRequest PASSED
+
+CatalogTest > filtersHistoryAndMaintainsBoundedLibrary PASSED
+
+CatalogTest > parsesSearchAndSkipsShorts PASSED
+
+LiveYouTubeTest > schemaReport STANDARD_OUT
+    [results] html=1565381 chars, ytInitialData=true, context=true
+    [results] renderers: buttonViewModel=79, listItemViewModel=72, macroMarkersListItemRenderer=54, thumbnailViewModel=51, avatarViewModel=42, toggleButtonViewModel=40, menuServiceItemRenderer=38, thumbnailOverlayToggleButtonRenderer=38, buttonRenderer=35, listViewModel=34, defaultButtonViewModel=32, toggledButtonViewModel=32, sheetViewModel=26, searchFilterRenderer=26, hotkeyDialogSectionOptionRenderer=26, shortsLockupViewModel=25, reelPlayerOverlayRenderer=25, unifiedSharePanelRenderer=20, videoRenderer=19, menuRenderer=19, menuNavigationItemRenderer=19, channelThumbnailWithLinkRenderer=19, thumbnailOverlayTimeStatusRenderer=19, thumbnailOverlayNowPlayingRenderer=19, thumbnailOverlayLoadingPreviewRenderer=18
+
+LiveYouTubeTest > schemaReport FAILED
+    dev.projeto5369.core.CatalogException: O YouTube exige consentimento ou autorização. Abra no YouTube para continuar.
+        at app//dev.projeto5369.core.YouTubeCatalog$request$2$2.onResponse(YouTubeCatalog.kt:45)
+        at app//okhttp3.internal.connection.RealCall$AsyncCall.run(RealCall.kt:519)
+        at java.base@21.0.13/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+        at java.base@21.0.13/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+        at java.base@21.0.13/java.lang.Thread.run(Thread.java:1583)
+
+LiveYouTubeTest > shortsSearchIsReadable STANDARD_OUT
+    [shorts] 35 shorts
+      - 2ZChJy9Aow0 | VIP5 DA INTEGRA OT TRANS #brasil #onibus #urbano #shorts #salvador  #viral #emalta #bus | https://i.ytimg.com/vi/2ZChJy9Aow0/frame0.jpg
+      - YIXts2qR1dE | Neobus Mega Plus Mercedes-Benz Escolar Qualificado Conect Diesel #onibus #onibusescolar #shorts | https://i.ytimg.com/vi/YIXts2qR1dE/frame0.jpg
+      - t6jGXupRcbw | 🎄Feliz natal com ônibus natalinos soltando neve. ☃️ | https://i.ytimg.com/vi/t6jGXupRcbw/frame0.jpg
+      - gxSW91HePTU | AUTO VIAÇÃO GADOTTI 9100 EM SÃO PAULO #ônibus #sertanejo | https://i.ytimg.com/vi/gxSW91HePTU/frame0.jpg
+      - gImHDWBD46E | Real Sul #automobile #comil #turismo #bus  #onibus #fyp #shorts #travel | https://i.ytimg.com/vi/gImHDWBD46E/frame0.jpg
+
+LiveYouTubeTest > shortsSearchIsReadable PASSED
+
+LiveYouTubeTest > transportReport STANDARD_OUT
+    [transport] ua=old-app cookie=null -> HTTP 302 location=https://m.youtube.com/results?search_query=document%C3%A1rio&hl=pt&gl=BR len=0 ytInitialData=false
+    [transport] ua=old-app cookie=SOCS=CAI -> HTTP 302 location=https://m.youtube.com/results?search_query=document%C3%A1rio&hl=pt&gl=BR len=0 ytInitialData=false
+    [transport] ua=app cookie=null -> HTTP 200 location=null len=1534130 ytInitialData=true
+    [transport] ua=app cookie=SOCS=CAI -> HTTP 200 location=null len=1656841 ytInitialData=true
+    [transport] ua=browser cookie=null -> HTTP 302 location=https://m.youtube.com/results?search_query=document%C3%A1rio&hl=pt&gl=BR len=0 ytInitialData=false
+    [transport] ua=browser cookie=SOCS=CAI -> HTTP 302 location=https://www.google.com/sorry/index?continue=https://www.youtube.com/results%3Fsearch_query%3Ddocument%25C3%25A1rio%26hl%3Dpt%26gl%3DBR&hl=pt&q=EgQDKp1eGPns6NcGIjCULH_tBo_iQF_uiOdFd6njl0g-N-RDIZSqrcW6a4LzahvLjTUQ0dku5b-faOJ1-x4yBz5qY25kclJaAUNg04WL7_rAxvj0AQ len=462 ytInitialData=false
+    [transport] runner country=US
+
+LiveYouTubeTest > transportReport PASSED
+
+LiveYouTubeTest > detailsAndChannelLoad FAILED
+    dev.projeto5369.core.CatalogException: O YouTube exige consentimento ou autorização. Abra no YouTube para continuar.
+        at app//dev.projeto5369.core.YouTubeCatalog$request$2$2.onResponse(YouTubeCatalog.kt:45)
+        at app//okhttp3.internal.connection.RealCall$AsyncCall.run(RealCall.kt:519)
+        at java.base@21.0.13/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+        at java.base@21.0.13/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+        at java.base@21.0.13/java.lang.Thread.run(Thread.java:1583)
+
+> Task :app:compileDebugKotlin
+
+> Task :core:test FAILED
+
+LiveYouTubeTest > searchReturnsLongVideosAndPaginates STANDARD_OUT
+    [search] 18 vídeos, próxima página: true
+      - apCvzsTn1qY | A QUEDA DO ANTIGO EGITO: A Maior Civilização da Antiguidade! | Documentário Completo | Um Documentário | 3991s | short=false | thumb=https://i.ytimg.com/vi/apCvzsTn1qY/hq720.jpg?sqp=-oaymwEXCNA
+      - cmGmJLC-CNo | OS SUMÉRIOS: A Primeira Civilização da Antiguidade | Documentário Completo | Um Documentário | 3319s | short=false | thumb=https://i.ytimg.com/vi/cmGmJLC-CNo/hq720.jpg?sqp=-oaymwEXCNA
+      - SNfNf1JdZl8 | PARAGUAI - O DESTINO INESPERADO | DOCUMENTÁRIO COMPLETO | Brasil Paralelo e Bruno Musa - Minuto do Musa | 4075s | short=false | thumb=https://i.ytimg.com/vi/SNfNf1JdZl8/hq720.jpg?sqp=-oaymwEXCNA
+      - 2nlq_NsKUF0 | Cacada a Pablo Escobar Documentario Completo NatGeo HD 720p | SoTrue | 3009s | short=false | thumb=https://i.ytimg.com/vi/2nlq_NsKUF0/hq720.jpg?sqp=-oaymwEXCNA
+      - AQu1ahHdsWc | NERO, O MAIS INSANO IMPERADOR DE ROMA - DOCUMENTÁRIO HISTORY CHANNEL - DOCUMENTÁRIO COMPLETO DUBLADO | Documentários Studio HD | 2640s | short=false | thumb=https://i.ytimg.com/vi/AQu1ahHdsWc/hq720.jpg?sqp=-oaymwEXCNA
+    [search p2] 20 vídeos
+
+LiveYouTubeTest > searchReturnsLongVideosAndPaginates PASSED
+
+21 tests completed, 2 failed
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1794782802069.json
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':core:test'.
+> There were failing tests. See the report at: file:///home/runner/work/Projeto-5369/Projeto-5369/core/build/reports/tests/test/index.html
+
+* Try:
+> Run with --scan to get full insights.
+
+BUILD FAILED in 46s
+32 actionable tasks: 32 executed

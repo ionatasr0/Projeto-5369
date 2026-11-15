@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.projeto5369.core.CatalogTest" tests="16" skipped="0" failures="0" errors="0" timestamp="2026-11-15T22:47:16" hostname="ip-10-0-143-150" time="0.755">
+  <properties/>
+  <testcase name="detailsFallBackToOEmbedWhenWatchPageHasNoDetails" classname="dev.projeto5369.core.CatalogTest" time="0.378"/>
+  <testcase name="extractsEmbeddedJsonWithEscapedStrings" classname="dev.projeto5369.core.CatalogTest" time="0.025"/>
+  <testcase name="rejectsOversizedResponse" classname="dev.projeto5369.core.CatalogTest" time="0.125"/>
+  <testcase name="searchAndContinuationUseCurrentPublicContext" classname="dev.projeto5369.core.CatalogTest" time="0.075"/>
+  <testcase name="validatesDurationsAndLinks" classname="dev.projeto5369.core.CatalogTest" time="0.0"/>
+  <testcase name="readsVideoDetailsAndSelectedChannelTab" classname="dev.projeto5369.core.CatalogTest" time="0.004"/>
+  <testcase name="refusesRepeatedContinuationToken" classname="dev.projeto5369.core.CatalogTest" time="0.025"/>
+  <testcase name="rejectsUnsupportedClients" classname="dev.projeto5369.core.CatalogTest" time="0.001"/>
+  <testcase name="userAgentDoesNotTriggerMobileRedirect" classname="dev.projeto5369.core.CatalogTest" time="0.001"/>
+  <testcase name="handlesRateLimitAndAuthorizationWithoutRetry" classname="dev.projeto5369.core.CatalogTest" time="0.019"/>
+  <testcase name="mapsOfficialPlayerEvents" classname="dev.projeto5369.core.CatalogTest" time="0.0"/>
+  <testcase name="parsesModernChannelLockup" classname="dev.projeto5369.core.CatalogTest" time="0.009"/>
+  <testcase name="roundTripsPersistentModel" classname="dev.projeto5369.core.CatalogTest" time="0.027"/>
+  <testcase name="cancelsNetworkRequest" classname="dev.projeto5369.core.CatalogTest" time="0.039"/>
+  <testcase name="filtersHistoryAndMaintainsBoundedLibrary" classname="dev.projeto5369.core.CatalogTest" time="0.016"/>
+  <testcase name="parsesSearchAndSkipsShorts" classname="dev.projeto5369.core.CatalogTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Nov 15, 2026 10:47:17 PM okhttp3.mockwebserver.MockWebServer$SocketHandler handle
+WARNING: MockWebServer[60209] connection from /127.0.0.1 didn't make a request
+]]></system-err>
+</testsuite>
