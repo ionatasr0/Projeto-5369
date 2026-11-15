@@ -56,16 +56,16 @@ internal fun embeddedHtml(id: String, autoplayMuted: Boolean = false, host: Stri
     require(videoId(id) == id)
     require(host == null || host == "https://www.youtube-nocookie.com")
     // Base URL identifies this Android package per YouTube embedded-player guidance.
-    return """<!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="referrer" content="strict-origin-when-cross-origin"></head>
+    return """<!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="referrer" content="strict-origin-when-cross-origin"><style>
+        html,body{margin:0;padding:0;width:100%;height:100vh;overflow:hidden;background:#000}
+        #player,iframe{position:fixed;inset:0;display:block;width:100vw!important;height:100vh!important;border:0}
+        </style></head>
         <body style="margin:0;background:${if(probe) "#600" else "#000"}">${if(probe) "<div style='position:absolute;top:0;left:0;color:#fff;font:20px sans-serif;z-index:9'>WEBVIEW DESENHA</div>" else ""}<div id="player"></div>
-        <script src="https://www.youtube.com/iframe_api"></script><script>
+        <script>
         var player; function onYouTubeIframeAPIReady(){player=new YT.Player('player',{${host?.let { "host:'$it'," } ?: ""}
         width:'100%',height:'100%',videoId:'$id',playerVars:{playsinline:1,origin:'https://dev.projeto5369'},
         events:{onReady:function(){var f=document.querySelector('iframe'),r=f?f.getBoundingClientRect():null;P5369.log('ready iframe='+(r?Math.round(r.width)+'x'+Math.round(r.height):'none')+' viewport='+innerWidth+'x'+innerHeight+' body='+document.body.clientWidth+'x'+document.body.clientHeight);P5369.event(5);${if(autoplayMuted) "player.mute();player.playVideo();" else ""}},onStateChange:function(e){P5369.event(e.data);if(e.data==1&&!window.t5369){window.t5369=setInterval(function(){P5369.time(player.getCurrentTime());},1000);}},onError:function(e){P5369.failure(e.data);}}});}
-        </script><style>
-        html,body{margin:0;padding:0;width:100%;height:100vh;overflow:hidden;background:#000}
-        #player,iframe{position:fixed;inset:0;display:block;width:100vw!important;height:100vh!important;border:0}
-        </style></body></html>""".trimIndent()
+        </script><script src="https://www.youtube.com/iframe_api"></script></body></html>""".trimIndent()
 }
 private class PlayerBridge(val eventHandler: (Int) -> Unit, val errorHandler: (Int) -> Unit) {
     @JavascriptInterface fun event(value: Int) = eventHandler(value)

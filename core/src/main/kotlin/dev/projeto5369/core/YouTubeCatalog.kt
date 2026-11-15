@@ -24,6 +24,7 @@ class YouTubeCatalog(
     private val client: OkHttpClient = OkHttpClient.Builder().callTimeout(25,TimeUnit.SECONDS)
         .connectTimeout(10,TimeUnit.SECONDS).followRedirects(false).build(),
     private val base: HttpUrl = "https://www.youtube.com/".toHttpUrl(),
+    private val onHttp: (endpoint: String, status: Int) -> Unit = { _, _ -> },
 ) : Catalog {
     private suspend fun request(path: String, query: Map<String,String> = emptyMap(), body: JsonObject? = null): String {
         val url = base.newBuilder().addPathSegments(path).apply { query.forEach { (k,v) -> addQueryParameter(k,v) } }.build()
@@ -40,6 +41,7 @@ class YouTubeCatalog(
                 override fun onResponse(call: Call,response: Response) {
                     try {
                         val result = response.use {
+                            onHttp(path.substringBefore('/'), it.code)
                             when(it.code) {
                                 429 -> throw CatalogException(CatalogException.Kind.RATE_LIMIT,"O YouTube limitou as consultas. Aguarde antes de tentar novamente.")
                                 301,302,303,307,308,401,403 -> throw CatalogException(CatalogException.Kind.BLOCKED,"O YouTube exige consentimento ou autorização. Abra no YouTube para continuar.")
@@ -92,7 +94,9 @@ class YouTubeCatalog(
         catch(e: CatalogException) {
             if(e.kind != CatalogException.Kind.UNAVAILABLE) throw e
             // The watch page can omit videoDetails (e.g. bot checks). YouTube's public oEmbed still gives title and channel.
-            val o = runCatching { YouTubeParser.parse(request("oembed",mapOf("url" to "https://www.youtube.com/watch?v=$id","format" to "json"))) }.getOrNull() ?: throw e
+            val o = try { YouTubeParser.parse(request("oembed",mapOf("url" to "https://www.youtube.com/watch?v=$id","format" to "json"))) }
+            catch(cancelled: kotlinx.coroutines.CancellationException) { throw cancelled }
+            catch(_: Exception) { throw e }
             Video(id,YouTubeParser.string(o,"title").ifBlank { throw e },YouTubeParser.string(o,"author_name"),null,null,"https://i.ytimg.com/vi/$id/hqdefault.jpg")
         }
     }

@@ -47,7 +47,7 @@ class EmbeddedLayoutTest {
                                   document.getElementById(id).replaceWith(f);
                                   setTimeout(function(){opts.events.onReady();},0);
                                 }};
-                                setTimeout(function(){onYouTubeIframeAPIReady();},0);
+                                onYouTubeIframeAPIReady();
                             """ else ""
                             return WebResourceResponse("text/javascript","UTF-8",ByteArrayInputStream(body.toByteArray()))
                         }

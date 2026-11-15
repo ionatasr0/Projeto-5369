@@ -24,7 +24,7 @@ class AppViewModel(app: Application): AndroidViewModel(app) {
     internal val account = AccountSession(viewModelScope, GoogleAccountGateway(app, BuildConfig.GOOGLE_WEB_CLIENT_ID),
         BuildConfig.GOOGLE_WEB_CLIENT_ID.isNotBlank(), { accountPreferences.getBoolean("enabled", false) },
         { accountPreferences.edit().putBoolean("enabled", it).apply() })
-    private val catalog: Catalog = YouTubeCatalog()
+    private val catalog: Catalog = YouTubeCatalog(onHttp = { endpoint, status -> android.util.Log.i("P5369Catalog", "stage=$endpoint http=$status") })
     private val store = LocalStore(app)
     val library = store.library.stateIn(viewModelScope,SharingStarted.WhileSubscribed(5_000),Library())
     private val mutableHome = MutableStateFlow(CatalogState())

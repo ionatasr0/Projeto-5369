@@ -128,6 +128,20 @@ class CatalogTest {
             server.takeRequest(); assertTrue(server.takeRequest().path!!.startsWith("/oembed?url="))
         }
     }
+    @Test fun cancellingMetadataFallbackPreservesCancellation() = runBlocking {
+        MockWebServer().use { server ->
+            server.enqueue(MockResponse().setBody("""<script>var ytInitialPlayerResponse = {"playabilityStatus":{"status":"LOGIN_REQUIRED"}};</script>"""))
+            server.enqueue(MockResponse().setSocketPolicy(SocketPolicy.NO_RESPONSE)); server.start()
+            val catalog = YouTubeCatalog(base=server.url("/"))
+            val job = launch { catalog.video("aqz-KE-bpKQ") }
+            withContext(Dispatchers.IO) {
+                assertNotNull(server.takeRequest(3,TimeUnit.SECONDS))
+                assertNotNull(server.takeRequest(3,TimeUnit.SECONDS))
+            }
+            job.cancelAndJoin()
+            assertTrue(job.isCancelled); assertEquals(2,server.requestCount)
+        }
+    }
     @Test fun userAgentDoesNotTriggerMobileRedirect() {
         assertFalse(USER_AGENT.contains("Android", ignoreCase = true)); assertFalse(USER_AGENT.contains("Mobile", ignoreCase = true))
     }
