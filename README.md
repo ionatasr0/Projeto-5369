@@ -29,7 +29,7 @@ O workflow [Primeiro APK](.github/workflows/android.yml) compila, testa, executa
 - `:app`: telas Material 3, Navigation Compose, `AppViewModel` com estados separados de catálogo, DataStore, Coil e dois adaptadores de reprodução.
 - YouTube: IFrame Player API oficial em WebView com identificação pelo pacote Android, anúncios/controles originais e fallback externo.
 - Media3: fontes HTTPS autorizadas com suporte instalado a progressivo/DASH/HLS. Não recebe URLs extraídas do YouTube.
-- Autenticação: contrato separado `AccountAuth`; primeiro APK funciona como visitante. OAuth de conta depende de configuração própria.
+- Autenticação: Credential Manager/Google ID com cancelamento, restauração pelo provedor e logout. Requer cliente Google Cloud próprio; sem configuração, funciona como visitante. O login não autentica o iframe YouTube. Ver [configuração](docs/LOGIN_SETUP.md).
 
 Rede assíncrona, parsing em `Dispatchers.Default`, páginas sob demanda, imagens com cache de memória/disco do Coil, corpo limitado a 8 MiB. Biblioteca limitada a 200 entradas de histórico, 500 favoritos e 20 pesquisas. Cancelamento ao substituir consulta e ao encerrar o ViewModel. Players pausam no background e liberam recursos ao sair.
 
@@ -45,3 +45,7 @@ Consultar [VALIDATION.md](docs/VALIDATION.md) para resultados efetivamente execu
 - [Notificações de dependências](THIRD_PARTY_NOTICES.md)
 
 O código original do Projeto 5369 é reservado ao titular do projeto; nenhuma licença aberta foi concedida para ele. Dependências mantêm suas próprias licenças.
+
+## Recuperação 0.2.1
+
+Correções de altura do iframe, troca/recriação do player e carregamento com prazo; integração de identidade Google própria. Diagnóstico, referências e limites de validação em [RECOVERY.md](docs/RECOVERY.md). Login real depende de configuração externa e reprodução real exige validação em aparelho.

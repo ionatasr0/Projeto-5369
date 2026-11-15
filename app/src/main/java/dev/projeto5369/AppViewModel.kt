@@ -20,6 +20,10 @@ val HOME_TOPICS = listOf(
 )
 val SHORTS_TOPICS = listOf(Topic("Para você","curiosidades"), Topic("Ônibus","ônibus"), Topic("Tecnologia","tecnologia"), Topic("Humor","humor"), Topic("Música","música"))
 class AppViewModel(app: Application): AndroidViewModel(app) {
+    private val accountPreferences = app.getSharedPreferences("account_restore", android.content.Context.MODE_PRIVATE)
+    internal val account = AccountSession(viewModelScope, GoogleAccountGateway(app, BuildConfig.GOOGLE_WEB_CLIENT_ID),
+        BuildConfig.GOOGLE_WEB_CLIENT_ID.isNotBlank(), { accountPreferences.getBoolean("enabled", false) },
+        { accountPreferences.edit().putBoolean("enabled", it).apply() })
     private val catalog: Catalog = YouTubeCatalog()
     private val store = LocalStore(app)
     val library = store.library.stateIn(viewModelScope,SharingStarted.WhileSubscribed(5_000),Library())
@@ -99,13 +103,14 @@ class AppViewModel(app: Application): AndroidViewModel(app) {
         detailRequest?.cancel(); mutableDetail.value=video; mutableDetailError.value=null
         detailRequest=viewModelScope.launch {
             try {
+                android.util.Log.i("P5369Player", "video=${video.id} stage=metadata")
                 val d = catalog.video(video.id)
                 // Keep what the list already knew when the details source is partial (oEmbed has no duration/channel id).
                 mutableDetail.value = d.copy(channel = d.channel.ifBlank { video.channel }, channelId = d.channelId ?: video.channelId,
                     durationSeconds = d.durationSeconds ?: video.durationSeconds, description = d.description.ifBlank { video.description })
             }
             catch(e: CancellationException) { throw e }
-            catch(e: Exception) { mutableDetailError.value=if(e is CatalogException) e.message else "Metadados indisponíveis." }
+            catch(e: Exception) { android.util.Log.w("P5369Player", "video=${video.id} stage=metadata category=${(e as? CatalogException)?.kind ?: "unknown"}"); mutableDetailError.value=if(e is CatalogException) e.message else "Metadados indisponíveis." }
         }
     }
     fun selected(id: String): Video = detail.value?.takeIf { it.id == id } ?: library.value.favorites.firstOrNull { it.id == id }

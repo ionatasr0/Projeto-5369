@@ -1,7 +1,7 @@
 name: Primeiro APK
 on:
   push:
-    branches: [main, dev/primeiro-apk]
+    branches: [main, dev/primeiro-apk, fix/login-video-playback]
   pull_request:
   workflow_dispatch:
 permissions:
@@ -24,6 +24,16 @@ jobs:
           packages: platform-tools platforms;android-35 build-tools;35.0.0
           log-accepted-android-sdk-licenses: false
       - uses: gradle/actions/setup-gradle@v4
+      - name: Configure own Google client (optional repository variable)
+        env:
+          GOOGLE_WEB_CLIENT_ID: ${{ vars.GOOGLE_WEB_CLIENT_ID }}
+        shell: bash
+        run: |
+          mkdir -p "$HOME/.gradle"
+          if [ -n "$GOOGLE_WEB_CLIENT_ID" ]; then
+            [[ "$GOOGLE_WEB_CLIENT_ID" =~ ^[A-Za-z0-9.-]+\.apps\.googleusercontent\.com$ ]]
+            printf '\ngoogleWebClientId=%s\n' "$GOOGLE_WEB_CLIENT_ID" >> "$HOME/.gradle/gradle.properties"
+          fi
       - name: Compile, test and lint
         shell: bash
         run: |

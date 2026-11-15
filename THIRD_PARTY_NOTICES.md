@@ -31,3 +31,7 @@ Nenhum código de SmartTube, MediaServiceCore, NewTube, Flow ou NewPipeExtractor
 ## Inter (fonte)
 
 Inter Regular, SemiBold e ExtraBold, © 2016-2023 The Inter Project Authors (https://github.com/rsms/inter). SIL Open Font License 1.1 — texto completo em `app/src/main/assets/licenses/Inter-OFL-1.1.txt`.
+
+## Google identity integration
+
+AndroidX Credential Manager / credentials-play-services-auth: Apache 2.0. Google ID (com.google.android.libraries.identity.googleid:googleid:1.1.1) and Google Play Services dependencies: Android Software Development Kit License, https://developer.android.com/studio/terms.html (license metadata checked in the published POM). No NewTube source or credentials are embedded.

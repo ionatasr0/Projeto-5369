@@ -69,3 +69,11 @@ fun videoId(input: String): String? {
         id?.takeIf { Regex("[A-Za-z0-9_-]{11}").matches(it) }
     }.getOrNull()
 }
+
+/** Unstarted is normal while waiting for a gesture; an error survives late IFrame callbacks. */
+fun nextEmbeddedState(current: PlaybackState, code: Int): PlaybackState = when {
+    current == PlaybackState.ERROR && code != 1 -> current
+    code == -1 && current == PlaybackState.READY -> current
+    code !in setOf(-1, 0, 1, 2, 3, 5) -> current
+    else -> playerState(code)
+}

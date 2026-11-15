@@ -38,6 +38,9 @@ private fun NavHostController.tab(route: String) = navigate(route) {
 
 @Composable
 fun App(vm: AppViewModel = viewModel()) {
+    val context = androidx.compose.ui.platform.LocalContext.current
+    val accountState by vm.account.state.collectAsStateWithLifecycle()
+    LaunchedEffect(Unit) { vm.account.restore(context) }
     val nav = rememberNavController()
     val current by nav.currentBackStackEntryAsState()
     val library by vm.library.collectAsStateWithLifecycle()
@@ -95,7 +98,7 @@ fun App(vm: AppViewModel = viewModel()) {
                         onPlaying = vm::watched, onFavorite = vm::favorite)
                 }
                 composable("library") {
-                    LibraryScreen(library, ::open, onList = { nav.navigate("list/$it") }, onSettings = { nav.navigate("settings") })
+                    LibraryScreen(library, ::open, onList = { nav.navigate("list/$it") }, onSettings = { nav.navigate("settings") }, accountState = accountState)
                 }
                 composable("list/{kind}", arguments = listOf(navArgument("kind") { type = NavType.StringType })) { entry ->
                     ListScreen(entry.arguments!!.getString("kind")!!, library, ::open, onChannel = { nav.navigate("channel/$it") },
@@ -103,7 +106,7 @@ fun App(vm: AppViewModel = viewModel()) {
                 }
                 composable("stats") { StatsScreen(library, ::open, onChannel = { nav.navigate("channel/$it") }) }
                 composable("settings") {
-                    SettingsScreen(library, vm::preferences, vm::glass, vm::clearHistory, onDemo = { nav.navigate("media-demo") }, onBack = { nav.popBackStack() })
+                    SettingsScreen(library, vm::preferences, vm::glass, vm::clearHistory, onDemo = { nav.navigate("media-demo") }, onBack = { nav.popBackStack() }, accountState = accountState, onSignIn = { vm.account.signIn(context) }, onSignOut = vm.account::signOut, onCancelAuth = vm.account::cancel)
                 }
                 composable("media-demo") { MediaDemoScreen(onBack = { nav.popBackStack() }) }
             }

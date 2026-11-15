@@ -1,8 +1,10 @@
 plugins { id("com.android.application"); kotlin("android"); kotlin("plugin.serialization"); id("org.jetbrains.kotlin.plugin.compose") }
+val googleWebClientId = providers.gradleProperty("googleWebClientId").orElse("")
 android {
     namespace = "dev.projeto5369"
     compileSdk = 35
-    defaultConfig { applicationId = "dev.projeto5369"; minSdk = 26; targetSdk = 35; versionCode = 2; versionName = "0.2.0"; testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner" }
+    defaultConfig { applicationId = "dev.projeto5369"; minSdk = 26; targetSdk = 35; versionCode = 3; versionName = "0.2.1"; testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner" }
+    defaultConfig { buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", "\"${googleWebClientId.get().also { require(it.isEmpty() || Regex("[A-Za-z0-9.-]+\\.apps\\.googleusercontent\\.com").matches(it)) }}\"") }
     buildFeatures { compose = true; buildConfig = true }
     compileOptions { sourceCompatibility = JavaVersion.VERSION_21; targetCompatibility = JavaVersion.VERSION_21 }
     testOptions { unitTests.isIncludeAndroidResources = true }
@@ -10,6 +12,9 @@ android {
 }
 dependencies {
     implementation(project(":core"))
+    implementation("androidx.credentials:credentials:1.5.0")
+    implementation("androidx.credentials:credentials-play-services-auth:1.5.0")
+    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
     implementation(platform("androidx.compose:compose-bom:2025.04.01"))
     implementation("androidx.activity:activity-compose:1.10.1")
     implementation("androidx.compose.material3:material3")

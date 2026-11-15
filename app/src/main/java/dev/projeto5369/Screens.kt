@@ -257,7 +257,7 @@ fun ChannelScreen(id: String, state: CatalogState, library: Library, more: () ->
 }
 
 @Composable
-fun LibraryScreen(library: Library, open: (Video) -> Unit, onList: (String) -> Unit, onSettings: () -> Unit) {
+fun LibraryScreen(library: Library, open: (Video) -> Unit, onList: (String) -> Unit, onSettings: () -> Unit, accountState: AuthState = AuthState.Guest) {
     val c = LocalOnda.current
     LazyColumn(Modifier.fillMaxSize().testTag("library-list"), contentPadding = BottomSpace) {
         item("title") { ScreenTitle("VOCÊ", "Biblioteca") { CircleIcon(OndaIcons.Sliders, "Ajustes", onSettings) } }
@@ -267,8 +267,8 @@ fun LibraryScreen(library: Library, open: (Video) -> Unit, onList: (String) -> U
                     Box(Modifier.size(64.dp).clip(CircleShape).background(Brush.linearGradient(listOf(Color(0xFFF2C48D), Color(0xFFC97A3A)))).border(3.dp, Lime, CircleShape),
                         contentAlignment = Alignment.Center) { Icon(OndaIcons.User, null, tint = Color.Black, modifier = Modifier.size(28.dp)) }
                     Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
-                        Text("Visitante", style = OndaType.title, color = c.text)
-                        Text("Login Google ainda não configurado. Tudo aqui fica salvo só neste aparelho.", style = OndaType.small, color = c.muted)
+                        Text((accountState as? AuthState.SignedIn)?.displayName ?: "Visitante", style = OndaType.title, color = c.text)
+                        Text("Conta e login em Ajustes. Biblioteca salva neste aparelho.", style = OndaType.small, color = c.muted)
                     }
                 }
             }
@@ -397,7 +397,7 @@ fun StatsScreen(library: Library, open: (Video) -> Unit, onChannel: (String) -> 
 }
 
 @Composable
-fun SettingsScreen(library: Library, preferences: (Int, Boolean) -> Unit, glass: (Boolean) -> Unit, clear: () -> Unit, onDemo: () -> Unit, onBack: () -> Unit) {
+fun SettingsScreen(library: Library, preferences: (Int, Boolean) -> Unit, glass: (Boolean) -> Unit, clear: () -> Unit, onDemo: () -> Unit, onBack: () -> Unit, accountState: AuthState = AuthState.Guest, onSignIn: () -> Unit = {}, onSignOut: () -> Unit = {}, onCancelAuth: () -> Unit = {}) {
     val c = LocalOnda.current
     @Composable fun Card(title: String, content: @Composable ColumnScope.() -> Unit) {
         OndaSurface(Modifier.padding(horizontal = 16.dp, vertical = 6.dp).fillMaxWidth()) {
@@ -427,17 +427,32 @@ fun SettingsScreen(library: Library, preferences: (Int, Boolean) -> Unit, glass:
             Pill("Limpar histórico e pesquisas", clear)
         } }
         item("account") { Card("Conta Google") {
-            Text("Modo visitante ativo. Login oficial pendente de configuração OAuth própria; favoritos, histórico e canais ficam neste aparelho.", style = OndaType.body, color = c.muted)
+            Text(when (accountState) {
+                is AuthState.SignedIn -> "Conectado como ${accountState.displayName}"
+                is AuthState.ConfigurationRequired -> accountState.message
+                is AuthState.Failure -> accountState.message
+                AuthState.Busy -> "Aguardando Google…"
+                AuthState.Guest -> "Modo visitante"
+            }, style = OndaType.body, color = c.muted)
+            when (accountState) {
+                AuthState.Busy -> Pill("Cancelar login", onCancelAuth)
+                is AuthState.SignedIn -> Pill("Sair da conta Google", onSignOut)
+                else -> {
+                    Pill("Entrar com o Google", onSignIn)
+                    if (accountState is AuthState.Failure) Pill("Limpar sessão Google", onSignOut)
+                }
+            }
+            Text("O login identifica sua conta no OndaTube. Favoritos e histórico continuam locais. O player oficial do YouTube tem sua própria sessão e restrições.", style = OndaType.small, color = c.muted)
         } }
         item("playback") { Card("Reprodução") {
             Text("YouTube: player incorporado oficial, com os controles e anúncios dele. Incorporação, disponibilidade e autorização dependem do YouTube e do proprietário. O botão de tela cheia do player gira para horizontal.", style = OndaType.body, color = c.muted)
             Pill("Testar Media3 com amostra autorizada", onDemo)
         } }
         item("about") { Card("Sobre") {
-            Text("OndaTube 0.2.0 · ecossistema Onda · JoojDevs\nBase técnica: Projeto 5369. Sem recomendações personalizadas oficiais; Shorts ficam fora do catálogo de vídeos longos.", style = OndaType.small, color = c.muted)
+            Text("OndaTube 0.2.1 · ecossistema Onda · JoojDevs\nBase técnica: Projeto 5369. Sem recomendações personalizadas oficiais; Shorts ficam fora do catálogo de vídeos longos.", style = OndaType.small, color = c.muted)
         } }
         item("licenses") { Card("Licenças de dependências") {
-            Text("AndroidX/Compose/Media3/DataStore: Apache 2.0\nKotlin e kotlinx: Apache 2.0\nOkHttp: Apache 2.0\nCoil: Apache 2.0\nProtobuf transitivo do DataStore: BSD 3-Clause\nFonte Inter: SIL Open Font License 1.1\nNenhum código GPL dos clientes de referência incorporado.", style = OndaType.small, color = c.muted)
+            Text("AndroidX/Compose/Media3/DataStore/Credential Manager: Apache 2.0\nGoogle ID/Play Services: Android SDK License\nKotlin e kotlinx: Apache 2.0\nOkHttp: Apache 2.0\nCoil: Apache 2.0\nProtobuf transitivo do DataStore: BSD 3-Clause\nFonte Inter: SIL Open Font License 1.1\nNenhum código GPL dos clientes de referência incorporado.", style = OndaType.small, color = c.muted)
         } }
     }
 }
