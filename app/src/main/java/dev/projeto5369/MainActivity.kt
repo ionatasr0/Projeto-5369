@@ -145,6 +145,6 @@ private fun SettingsScreen(library: Library,preferences:(Int,Boolean)->Unit,clea
         item {Text("Conta Google",style=MaterialTheme.typography.titleMedium); Text("Modo visitante ativo. Login oficial pendente de configuração OAuth própria; favoritos e histórico ficam neste aparelho.")}
         item {Text("Reprodução",style=MaterialTheme.typography.titleMedium); Text("YouTube: player incorporado oficial. Incorporação, disponibilidade e autorização dependem do YouTube e do proprietário."); TextButton(onClick=onDemo) {Text("Testar Media3 com amostra autorizada")}}
         item {Text("Projeto 5369 • 0.1.0 • interface provisória\nSem recomendações personalizadas oficiais. Shorts são omitidos do catálogo.",style=MaterialTheme.typography.bodySmall)}
-        item {Text("Licenças de dependências",style=MaterialTheme.typography.titleMedium); Text("AndroidX/Compose/Media3/DataStore: Apache 2.0\nKotlin e kotlinx: Apache 2.0\nOkHttp: Apache 2.0\nCoil: Apache 2.0\nNenhum código GPL dos clientes de referência incorporado.",style=MaterialTheme.typography.bodySmall)}
+        item {Text("Licenças de dependências",style=MaterialTheme.typography.titleMedium); Text("AndroidX/Compose/Media3/DataStore: Apache 2.0\nKotlin e kotlinx: Apache 2.0\nOkHttp: Apache 2.0\nCoil: Apache 2.0\nProtobuf transitivo do DataStore: BSD 3-Clause\nNenhum código GPL dos clientes de referência incorporado.",style=MaterialTheme.typography.bodySmall)}
     }
 }

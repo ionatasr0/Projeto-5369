@@ -11,10 +11,14 @@ Bibliotecas distribuídas no APK, conforme dependências Gradle:
 | AndroidX Media3 (ExoPlayer, DASH, HLS, UI) | Apache-2.0 | https://github.com/androidx/media |
 | OkHttp e Okio | Apache-2.0 | https://github.com/square/okhttp e https://github.com/square/okio |
 | Coil | Apache-2.0 | https://github.com/coil-kt/coil |
-| AndroidX annotations, collection, concurrent, core e demais transitivas AndroidX | Apache-2.0 | Android Open Source Project |
+| Accompanist DrawablePainter | Apache-2.0 | https://github.com/google/accompanist |
+| Guava, failureaccess e listenablefuture | Apache-2.0 | https://github.com/google/guava |
+| JSpecify annotations | Apache-2.0 | https://github.com/jspecify/jspecify |
+| AndroidX annotations, collection, concurrent, core e demais transitivas AndroidX (exceto Protobuf abaixo) | Apache-2.0 | Android Open Source Project |
+| DataStore preferences external Protobuf (Google) | BSD-3-Clause | https://github.com/protocolbuffers/protobuf |
 | JetBrains annotations | Apache-2.0 | https://github.com/JetBrains/java-annotations |
 
-Texto Apache 2.0 incluído no APK em `assets/licenses/Apache-2.0.txt`. Copyrights permanecem com os respectivos autores. Não foram modificadas as bibliotecas upstream. Gradle Wrapper: Apache-2.0, Gradle Inc. e contribuidores, ferramenta de compilação incluída no repositório.
+Texto Apache 2.0 incluído no APK em `assets/licenses/Apache-2.0.txt`; copyright e licença Protobuf em `assets/licenses/Protobuf-BSD-3-Clause.txt`. Copyrights permanecem com os respectivos autores. Não foram modificadas as bibliotecas upstream. Gradle Wrapper: Apache-2.0, Gradle Inc. e contribuidores, ferramenta de compilação incluída no repositório.
 
 JUnit (EPL-1.0), Hamcrest (BSD), MockWebServer (Apache-2.0), Robolectric (MIT) e AndroidX Test (Apache-2.0) são somente ferramentas de teste, não dependências da versão de produção. A resolução completa pode ser inspecionada com `./gradlew :app:dependencies --configuration debugRuntimeClasspath`.
 

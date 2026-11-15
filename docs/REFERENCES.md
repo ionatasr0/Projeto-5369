@@ -38,3 +38,7 @@ Verificados árvore, licença e README. Ambos declaram GPLv3. Foram usados para 
 ## Decisões
 
 Implementação original de transporte/parser/modelos; catálogo anônimo; nenhuma credencial de terceiro; fallback de reprodução para IFrame oficial; módulos DASH/HLS padrão do Media3 restritos a fontes autorizadas; SABR adiado; OAuth próprio pendente. O APK não afirma oferecer supressão de anúncios, assinaturas de conta, playback protegido, download ou contorno de verificações.
+
+## Conferência da distribuição efetiva
+
+O relatório Gradle `debugRuntimeClasspath` e 178 POMs locais foram examinados. Licenças declaradas encontradas: Apache 2.0 e BSD-3-Clause (Protobuf transitivo de DataStore). As dependências Guava herdam Apache 2.0 do POM pai, conferido separadamente. Os avisos e o copyright BSD de Protobuf foram incluídos no APK. Nenhuma dependência GPL foi adicionada ao runtime. Isso documenta as declarações observadas, sem substituir auditoria jurídica completa.
