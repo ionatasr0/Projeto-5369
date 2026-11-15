@@ -22,6 +22,24 @@ class LiveYouTubeTest {
         println("[$label] renderers: " + counts.entries.sortedByDescending { it.value }.take(25).joinToString { "${it.key}=${it.value}" })
     }
 
+    @Test fun transportReport() {
+        assumeTrue(live)
+        val client = okhttp3.OkHttpClient.Builder().followRedirects(false).build()
+        val url = "https://www.youtube.com/results?search_query=document%C3%A1rio&hl=pt&gl=BR"
+        val uas = mapOf("app" to "Projeto5369/0.1 (Android; anonymous public catalog)",
+            "browser" to "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36")
+        for ((name, ua) in uas) for (cookie in listOf(null, "SOCS=CAI")) {
+            val req = okhttp3.Request.Builder().url(url).header("User-Agent", ua).header("Accept-Language", "pt-BR,pt;q=0.9")
+                .apply { if (cookie != null) header("Cookie", cookie) }.build()
+            runCatching { client.newCall(req).execute().use { r ->
+                val body = r.body?.string().orEmpty()
+                println("[transport] ua=$name cookie=$cookie -> HTTP ${r.code} location=${r.header("Location")} len=${body.length} ytInitialData=${body.contains("ytInitialData")}")
+            } }.onFailure { println("[transport] ua=$name cookie=$cookie -> ${it}") }
+        }
+        val geo = runCatching { client.newCall(okhttp3.Request.Builder().url("https://ipinfo.io/country").build()).execute().use { it.body?.string()?.trim() } }.getOrNull()
+        println("[transport] runner country=$geo")
+    }
+
     @Test fun searchReturnsLongVideosAndPaginates() { runBlocking {
         assumeTrue(live)
         val first = catalog.search("documentário completo")
