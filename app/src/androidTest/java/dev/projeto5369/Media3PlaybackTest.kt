@@ -36,7 +36,10 @@ class Media3PlaybackTest {
             try {
                 assertTrue("Nenhum frame decodificado em 45 segundos",rendered.await(45,TimeUnit.SECONDS))
                 assertNull("Falha na fonte autorizada: ${failure.get()}",failure.get())
-                SystemClock.sleep(1_500)
+                // Emulators can be slow to start the clock: poll up to 10 s instead of a fixed 1.5 s.
+                val deadline = SystemClock.uptimeMillis() + 10_000
+                var position = 0L
+                while (SystemClock.uptimeMillis() < deadline) { scenario.onActivity { position = player.currentPosition }; if (position >= 1_000) break; SystemClock.sleep(250) }
                 scenario.onActivity {
                     assertTrue("A posição não avançou",player.currentPosition >= 1_000)
                     assertTrue("O player não está reproduzindo",player.isPlaying)

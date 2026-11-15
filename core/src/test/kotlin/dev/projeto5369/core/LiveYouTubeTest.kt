@@ -26,7 +26,7 @@ class LiveYouTubeTest {
         assumeTrue(live)
         val client = okhttp3.OkHttpClient.Builder().followRedirects(false).build()
         val url = "https://www.youtube.com/results?search_query=document%C3%A1rio&hl=pt&gl=BR"
-        val uas = mapOf("app" to "Projeto5369/0.1 (Android; anonymous public catalog)",
+        val uas = mapOf("old-app" to "Projeto5369/0.1 (Android; anonymous public catalog)", "app" to USER_AGENT,
             "browser" to "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36")
         for ((name, ua) in uas) for (cookie in listOf(null, "SOCS=CAI")) {
             val req = okhttp3.Request.Builder().url(url).header("User-Agent", ua).header("Accept-Language", "pt-BR,pt;q=0.9")

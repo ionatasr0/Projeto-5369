@@ -40,7 +40,12 @@ import androidx.media3.ui.PlayerView
 import dev.projeto5369.core.*
 import kotlinx.coroutines.delay
 
-internal fun embeddedHtml(id: String): String {
+/** Test-only switches (instrumentation): muted autoplay and the last reported player time. Off in normal use. */
+internal object PlayerDebug {
+    @Volatile var autoplayMuted = false
+    @Volatile var lastTime = -1.0
+}
+internal fun embeddedHtml(id: String, autoplayMuted: Boolean = false): String {
     require(videoId(id) == id)
     // Base URL identifies this Android package per YouTube embedded-player guidance.
     return """<!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"></head>
@@ -48,12 +53,13 @@ internal fun embeddedHtml(id: String): String {
         <script src="https://www.youtube.com/iframe_api"></script><script>
         var player; function onYouTubeIframeAPIReady(){player=new YT.Player('player',{
         width:'100%',height:'100%',videoId:'$id',playerVars:{playsinline:1,origin:'https://dev.projeto5369'},
-        events:{onReady:function(){P5369.event(5);},onStateChange:function(e){P5369.event(e.data);},onError:function(e){P5369.failure(e.data);}}});}
+        events:{onReady:function(){P5369.event(5);${if(autoplayMuted) "player.mute();player.playVideo();" else ""}},onStateChange:function(e){P5369.event(e.data);if(e.data==1&&!window.t5369){window.t5369=setInterval(function(){P5369.time(player.getCurrentTime());},1000);}},onError:function(e){P5369.failure(e.data);}}});}
         </script><style>html,body,#player{width:100%;height:100%;position:absolute}</style></body></html>""".trimIndent()
 }
 private class PlayerBridge(val eventHandler: (Int) -> Unit, val errorHandler: (Int) -> Unit) {
     @JavascriptInterface fun event(value: Int) = eventHandler(value)
     @JavascriptInterface fun failure(value: Int) = errorHandler(value)
+    @JavascriptInterface fun time(value: Double) { PlayerDebug.lastTime = value }
 }
 private tailrec fun Context.activity(): Activity? = when(this) { is Activity -> this; is ContextWrapper -> baseContext.activity(); else -> null }
 
@@ -108,7 +114,7 @@ fun YouTubePlayer(video: Video,onPlaying: () -> Unit,modifier: Modifier = Modifi
             setBackgroundColor(android.graphics.Color.BLACK)
             settings.javaScriptEnabled=true
             settings.domStorageEnabled=true
-            settings.mediaPlaybackRequiresUserGesture=true
+            settings.mediaPlaybackRequiresUserGesture=!PlayerDebug.autoplayMuted
             settings.allowFileAccess=false
             settings.allowContentAccess=false
             settings.mixedContentMode=WebSettings.MIXED_CONTENT_NEVER_ALLOW
@@ -133,7 +139,7 @@ fun YouTubePlayer(video: Video,onPlaying: () -> Unit,modifier: Modifier = Modifi
                     else -> "O player oficial retornou o erro $code."
                 } } }
             ),"P5369")
-            loadDataWithBaseURL("https://dev.projeto5369/",embeddedHtml(video.id),"text/html","UTF-8",null)
+            loadDataWithBaseURL("https://dev.projeto5369/",embeddedHtml(video.id,PlayerDebug.autoplayMuted),"text/html","UTF-8",null)
         }
     }
     BackHandler(enabled = fullscreen) { chrome.onHideCustomView() }

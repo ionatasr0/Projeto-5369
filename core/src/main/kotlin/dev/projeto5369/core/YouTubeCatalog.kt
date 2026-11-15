@@ -13,6 +13,12 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
+/**
+ * Identifies the app honestly. It must NOT contain "Android"/"Mobile": YouTube answers such agents with a
+ * 302 to m.youtube.com (verified live in CI, 15/11/2026), which this client treats as blocked, so search failed.
+ */
+const val USER_AGENT = "OndaTube/0.2 (Projeto5369; anonymous public catalog)"
+
 /** Anonymous public WEB session only. No embedded keys, cookies, tokens or impersonated TV clients. */
 class YouTubeCatalog(
     private val client: OkHttpClient = OkHttpClient.Builder().callTimeout(25,TimeUnit.SECONDS)
@@ -21,7 +27,7 @@ class YouTubeCatalog(
 ) : Catalog {
     private suspend fun request(path: String, query: Map<String,String> = emptyMap(), body: JsonObject? = null): String {
         val url = base.newBuilder().addPathSegments(path).apply { query.forEach { (k,v) -> addQueryParameter(k,v) } }.build()
-        val req = Request.Builder().url(url).header("User-Agent","Projeto5369/0.1 (Android; anonymous public catalog)")
+        val req = Request.Builder().url(url).header("User-Agent",USER_AGENT)
             .header("Accept-Language","pt-BR,pt;q=0.9")
         if(body != null) req.post(body.toString().toRequestBody("application/json".toMediaType()))
         return suspendCancellableCoroutine { cont ->
