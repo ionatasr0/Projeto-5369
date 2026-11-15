@@ -45,22 +45,28 @@ internal object PlayerDebug {
     @Volatile var autoplayMuted = false
     @Volatile var lastTime = -1.0
     @Volatile var host: String? = null
+    /** Diagnostics only: "iframeapi" (default) or "embedurl"; software layer; visible probe colours. */
+    @Volatile var mode = "iframeapi"
+    @Volatile var software = false
+    @Volatile var probe = false
+    @Volatile var lastLog = ""
 }
-internal fun embeddedHtml(id: String, autoplayMuted: Boolean = false, host: String? = null): String {
+internal fun embeddedHtml(id: String, autoplayMuted: Boolean = false, host: String? = null, probe: Boolean = false): String {
     require(videoId(id) == id)
     // Base URL identifies this Android package per YouTube embedded-player guidance.
     return """<!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"></head>
-        <body style="margin:0;background:#000"><div id="player"></div>
+        <body style="margin:0;background:${if(probe) "#600" else "#000"}">${if(probe) "<div style='position:absolute;top:0;left:0;color:#fff;font:20px sans-serif;z-index:9'>WEBVIEW DESENHA</div>" else ""}<div id="player"></div>
         <script src="https://www.youtube.com/iframe_api"></script><script>
         var player; function onYouTubeIframeAPIReady(){player=new YT.Player('player',{${host?.let { "host:'$it'," } ?: ""}
         width:'100%',height:'100%',videoId:'$id',playerVars:{playsinline:1,origin:'https://dev.projeto5369'},
-        events:{onReady:function(){P5369.event(5);${if(autoplayMuted) "player.mute();player.playVideo();" else ""}},onStateChange:function(e){P5369.event(e.data);if(e.data==1&&!window.t5369){window.t5369=setInterval(function(){P5369.time(player.getCurrentTime());},1000);}},onError:function(e){P5369.failure(e.data);}}});}
+        events:{onReady:function(){var f=document.querySelector('iframe'),r=f?f.getBoundingClientRect():null;P5369.log('ready iframe='+(r?Math.round(r.width)+'x'+Math.round(r.height):'none')+' viewport='+innerWidth+'x'+innerHeight+' body='+document.body.clientWidth+'x'+document.body.clientHeight);P5369.event(5);${if(autoplayMuted) "player.mute();player.playVideo();" else ""}},onStateChange:function(e){P5369.event(e.data);if(e.data==1&&!window.t5369){window.t5369=setInterval(function(){P5369.time(player.getCurrentTime());},1000);}},onError:function(e){P5369.failure(e.data);}}});}
         </script><style>html,body,#player{width:100%;height:100%;position:absolute}</style></body></html>""".trimIndent()
 }
 private class PlayerBridge(val eventHandler: (Int) -> Unit, val errorHandler: (Int) -> Unit) {
     @JavascriptInterface fun event(value: Int) = eventHandler(value)
     @JavascriptInterface fun failure(value: Int) = errorHandler(value)
     @JavascriptInterface fun time(value: Double) { PlayerDebug.lastTime = value }
+    @JavascriptInterface fun log(value: String) { PlayerDebug.lastLog = value; Log.d("P5369Player", value) }
 }
 private tailrec fun Context.activity(): Activity? = when(this) { is Activity -> this; is ContextWrapper -> baseContext.activity(); else -> null }
 
@@ -116,6 +122,7 @@ fun YouTubePlayer(video: Video,onPlaying: () -> Unit,modifier: Modifier = Modifi
             settings.javaScriptEnabled=true
             settings.domStorageEnabled=true
             settings.mediaPlaybackRequiresUserGesture=!PlayerDebug.autoplayMuted
+            if(PlayerDebug.software) setLayerType(View.LAYER_TYPE_SOFTWARE,null)
             settings.allowFileAccess=false
             settings.allowContentAccess=false
             settings.mixedContentMode=WebSettings.MIXED_CONTENT_NEVER_ALLOW
@@ -127,6 +134,7 @@ fun YouTubePlayer(video: Video,onPlaying: () -> Unit,modifier: Modifier = Modifi
                     runCatching { context.startActivity(Intent(Intent.ACTION_VIEW,request.url)) }
                     return true
                 }
+                override fun onPageFinished(view: WebView,url: String?) { Log.d("P5369Player","pageFinished view=${view.width}x${view.height} url=${url?.take(60)}") }
                 override fun onReceivedError(view: WebView,request: WebResourceRequest,e: WebResourceError) {
                     if(request.isForMainFrame) { playback=PlaybackState.ERROR; error="Falha de rede do player oficial (${e.errorCode})." }
                 }
@@ -141,7 +149,8 @@ fun YouTubePlayer(video: Video,onPlaying: () -> Unit,modifier: Modifier = Modifi
                     else -> "O player oficial retornou o erro $code."
                 } } }
             ),"P5369")
-            loadDataWithBaseURL("https://dev.projeto5369/",embeddedHtml(video.id,PlayerDebug.autoplayMuted,PlayerDebug.host),"text/html","UTF-8",null)
+            if(PlayerDebug.mode == "embedurl") loadUrl("https://www.youtube.com/embed/${video.id}?playsinline=1&origin=https://dev.projeto5369",mapOf("Referer" to "https://dev.projeto5369/"))
+            else loadDataWithBaseURL("https://dev.projeto5369/",embeddedHtml(video.id,PlayerDebug.autoplayMuted,PlayerDebug.host,PlayerDebug.probe),"text/html","UTF-8",null)
         }
     }
     BackHandler(enabled = fullscreen) { chrome.onHideCustomView() }
