@@ -43,7 +43,7 @@ class EmbeddedLayoutTest {
                             val body = if (request.url.path == "/iframe_api") """
                                 window.YT={Player:function(id,opts){
                                   var f=document.createElement('iframe'); f.id='widget2';
-                                  f.style.width=opts.width; f.style.height=opts.height;
+                                  f.style.width=opts.width+'px'; f.style.height=opts.height+'px';
                                   document.getElementById(id).replaceWith(f);
                                   setTimeout(function(){opts.events.onReady();},0);
                                 }};

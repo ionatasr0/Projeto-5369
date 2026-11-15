@@ -62,9 +62,16 @@ internal fun embeddedHtml(id: String, autoplayMuted: Boolean = false, host: Stri
         </style></head>
         <body style="margin:0;background:${if(probe) "#600" else "#000"}">${if(probe) "<div style='position:absolute;top:0;left:0;color:#fff;font:20px sans-serif;z-index:9'>WEBVIEW DESENHA</div>" else ""}<div id="player"></div>
         <script>
-        var player; function onYouTubeIframeAPIReady(){player=new YT.Player('player',{${host?.let { "host:'$it'," } ?: ""}
-        width:'100%',height:'100%',videoId:'$id',playerVars:{playsinline:1,origin:'https://dev.projeto5369'},
-        events:{onReady:function(){var f=document.querySelector('iframe'),r=f?f.getBoundingClientRect():null;P5369.log('ready iframe='+(r?Math.round(r.width)+'x'+Math.round(r.height):'none')+' viewport='+innerWidth+'x'+innerHeight+' body='+document.body.clientWidth+'x'+document.body.clientHeight);P5369.event(5);${if(autoplayMuted) "player.mute();player.playVideo();" else ""}},onStateChange:function(e){P5369.event(e.data);if(e.data==1&&!window.t5369){window.t5369=setInterval(function(){P5369.time(player.getCurrentTime());},1000);}},onError:function(e){P5369.failure(e.data);}}});}
+        var player;
+        function fitPlayer(){var w=innerWidth,h=innerHeight;if(w<=0||h<=0)return;
+          document.documentElement.style.height=h+'px';document.body.style.height=h+'px';
+          var f=document.querySelector('iframe');if(f){f.style.setProperty('width',w+'px','important');f.style.setProperty('height',h+'px','important');}
+          if(player&&player.setSize)player.setSize(w,h);
+        }
+        window.addEventListener('resize',fitPlayer);
+        function onYouTubeIframeAPIReady(){fitPlayer();player=new YT.Player('player',{${host?.let { "host:'$it'," } ?: ""}
+        width:innerWidth,height:innerHeight,videoId:'$id',playerVars:{playsinline:1,origin:'https://dev.projeto5369'},
+        events:{onReady:function(){fitPlayer();var f=document.querySelector('iframe'),r=f?f.getBoundingClientRect():null;P5369.log('ready iframe='+(r?Math.round(r.width)+'x'+Math.round(r.height):'none')+' viewport='+innerWidth+'x'+innerHeight+' body='+document.body.clientWidth+'x'+document.body.clientHeight);P5369.event(5);${if(autoplayMuted) "player.mute();player.playVideo();" else ""}},onStateChange:function(e){P5369.event(e.data);if(e.data==1&&!window.t5369){window.t5369=setInterval(function(){P5369.time(player.getCurrentTime());},1000);}},onError:function(e){P5369.failure(e.data);}}});}
         </script><script src="https://www.youtube.com/iframe_api"></script></body></html>""".trimIndent()
 }
 private class PlayerBridge(val eventHandler: (Int) -> Unit, val errorHandler: (Int) -> Unit) {
@@ -185,8 +192,17 @@ fun YouTubePlayer(video: Video,onPlaying: () -> Unit,modifier: Modifier = Modifi
                     else -> "O player oficial retornou o erro $code."
                 } } }
             ),"P5369")
-            if(PlayerDebug.mode == "embedurl") loadUrl("https://www.youtube.com/embed/${video.id}?playsinline=1&origin=https://dev.projeto5369",mapOf("Referer" to "https://dev.projeto5369/"))
-            else loadDataWithBaseURL("https://dev.projeto5369/",embeddedHtml(video.id,PlayerDebug.autoplayMuted,PlayerDebug.host,PlayerDebug.probe),"text/html","UTF-8",null)
+            // WebView can compute viewport CSS units as zero when HTML arrives before native layout.
+            // Start once at a positive measured size; the document also fits again on ready/resize.
+            addOnLayoutChangeListener(object : View.OnLayoutChangeListener {
+                override fun onLayoutChange(v: View, left: Int, top: Int, right: Int, bottom: Int,
+                                            oldLeft: Int, oldTop: Int, oldRight: Int, oldBottom: Int) {
+                    if(right <= left || bottom <= top || !active.get()) return
+                    removeOnLayoutChangeListener(this)
+                    if(PlayerDebug.mode == "embedurl") loadUrl("https://www.youtube.com/embed/${video.id}?playsinline=1&origin=https://dev.projeto5369",mapOf("Referer" to "https://dev.projeto5369/"))
+                    else loadDataWithBaseURL("https://dev.projeto5369/",embeddedHtml(video.id,PlayerDebug.autoplayMuted,PlayerDebug.host,PlayerDebug.probe),"text/html","UTF-8",null)
+                }
+            })
         }
     }
     BackHandler(enabled = fullscreen) { chrome.onHideCustomView() }
