@@ -29,6 +29,10 @@ data class Library(
     val history: List<Video> = emptyList(), val favorites: List<Video> = emptyList(),
     val recentSearches: List<String> = emptyList(), val minimumMinutes: Int = 20,
     val hideWatched: Boolean = false,
+    /** Visual theme only: AMOLED black (false) or Onda Glass (true). */
+    val glass: Boolean = false,
+    /** Channels followed on this device only (not a YouTube subscription). */
+    val channels: List<Channel> = emptyList(),
 ) {
     fun visible(videos: List<Video>): List<Video> = videos.filter { video ->
         !video.isShort && (minimumMinutes == 0 || (video.durationSeconds ?: -1) >= minimumMinutes * 60L) &&
@@ -37,6 +41,9 @@ data class Library(
     fun watched(video: Video) = copy(history = (listOf(video) + history.filterNot { it.id == video.id }).take(200))
     fun favorite(video: Video) = copy(favorites = if (favorites.any { it.id == video.id }) favorites.filterNot { it.id == video.id }
         else (listOf(video) + favorites).take(500))
+    fun follow(channel: Channel) = copy(channels = if (channels.any { it.id == channel.id }) channels.filterNot { it.id == channel.id }
+        else (listOf(channel.copy(description = "")) + channels).take(100))
+    fun forget(query: String) = copy(recentSearches = recentSearches.filterNot { it == query })
     fun searched(query: String) = copy(recentSearches = (listOf(query.trim()) + recentSearches.filterNot { it == query.trim() }).filter { it.isNotBlank() }.take(20))
 }
 enum class PlaybackState { LOADING, READY, PLAYING, PAUSED, ENDED, ERROR }

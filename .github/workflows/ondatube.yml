@@ -42,13 +42,12 @@ jobs:
         with:
           api-level: 35
           arch: x86_64
-          target: google_apis
-          profile: pixel_6
+          profile: pixel_2
           disable-animations: true
           script: |
             ./gradlew :app:connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.ytLive=true -Pandroid.injected.androidTest.leaveApksInstalledAfterRun=true --console=plain > out/device.log 2>&1; echo $? > out/device.status
             mkdir -p out/shots; for f in $(adb shell run-as dev.projeto5369 ls files 2>/dev/null | tr -d '\r' | grep png); do adb exec-out run-as dev.projeto5369 cat files/$f > out/shots/$f; done; ls -la out/shots
-            adb logcat -d -t 3000 > out/logcat.txt 2>&1 || true
+            adb logcat -d -t 40000 > out/logcat.txt 2>&1 || true; grep -E 'P5369|chromium|cr_' out/logcat.txt > out/logcat-player.txt || true
       - name: Collect reports and encrypt APK
         if: always()
         shell: bash

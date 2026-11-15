@@ -10,26 +10,42 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class NavigationTest {
     @get:Rule val compose=createAndroidComposeRule<MainActivity>()
+    private fun tab(name: String) = compose.onNode(hasContentDescription(name) and hasAnyAncestor(hasTestTag("hotbar"))).performClick()
+
     @Test fun searchLinkValidationAndLocalSettings() {
-        compose.onNodeWithText("Pesquisa",useUnmergedTree=true).performClick()
-        compose.onNodeWithText("URL do YouTube ou ID").performTextInput("invalid")
-        compose.onNodeWithText("Abrir vídeo",useUnmergedTree=true).performClick()
+        tab("Pesquisa")
+        compose.onNodeWithTag("search-list").performScrollToNode(hasTestTag("link-field"))
+        compose.onNodeWithTag("link-field").performTextInput("invalid")
+        compose.onNodeWithText("Abrir vídeo").performClick()
         compose.onNodeWithText("Informe um link do YouTube ou ID válido.").assertIsDisplayed()
-        compose.onNodeWithText("Ajustes",useUnmergedTree=true).performClick()
+        tab("Você")
+        compose.onNodeWithContentDescription("Ajustes").performClick()
         compose.onNodeWithText("40 min").performClick()
-        compose.onNodeWithText("Biblioteca",useUnmergedTree=true).performClick()
-        compose.onNodeWithText("Favoritos locais").assertIsDisplayed()
+        compose.onNodeWithText("Onda Glass").performClick()
+        compose.onNodeWithText("Preto AMOLED").performClick()
+        compose.onNodeWithText("Duração mínima").assertIsDisplayed()
+        tab("Início")
+        compose.onNodeWithText("Início").assertIsDisplayed()
     }
+
     @Test fun opensVideoDetailsWithoutCatalogAndSavesFavorite() {
-        compose.onNodeWithText("Pesquisa",useUnmergedTree=true).performClick()
-        compose.onNodeWithText("URL do YouTube ou ID").performTextInput("https://youtu.be/aqz-KE-bpKQ")
-        compose.onNodeWithText("Abrir vídeo",useUnmergedTree=true).performClick()
-        compose.onNodeWithText("Reproduzir",useUnmergedTree=true).assertIsDisplayed()
-        compose.onNodeWithText("Favoritar no aparelho").performScrollTo().performClick()
-        compose.waitUntil(timeoutMillis=5_000) {
-            compose.onAllNodesWithText("Remover dos favoritos").fetchSemanticsNodes().isNotEmpty()
-        }
-        compose.onNodeWithText("Biblioteca",useUnmergedTree=true).performClick()
-        compose.onNodeWithText("Favoritos locais").assertIsDisplayed()
+        tab("Pesquisa")
+        compose.onNodeWithTag("search-list").performScrollToNode(hasTestTag("link-field"))
+        compose.onNodeWithTag("link-field").performTextInput("https://youtu.be/aqz-KE-bpKQ")
+        compose.onNodeWithText("Abrir vídeo").performClick()
+        compose.onNodeWithTag("yt-player").assertExists()
+        compose.onNodeWithTag("watch-list").performScrollToNode(hasText("Favoritar no aparelho"))
+        compose.onNodeWithText("Favoritar no aparelho").performClick()
+        compose.waitUntil(timeoutMillis=5_000) { compose.onAllNodesWithText("Remover dos favoritos").fetchSemanticsNodes().isNotEmpty() }
+        compose.onNodeWithContentDescription("Voltar").performClick()
+        tab("Você")
+        compose.onNodeWithTag("library-list").performScrollToNode(hasText("Favoritos locais"))
+        compose.onNodeWithText("Favoritos locais").assertExists()
+    }
+
+    @Test fun shortsTabOpens() {
+        tab("Shorts")
+        compose.onNodeWithTag("shorts").assertExists()
+        compose.onNodeWithText("Para você").assertExists()
     }
 }

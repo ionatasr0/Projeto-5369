@@ -45,11 +45,16 @@ class LiveYouTubePlaybackTest {
         val playing = AtomicBoolean(false)
         compose.setContent { MaterialTheme { Column { YouTubePlayer(Video(id, label), onPlaying = { playing.set(true) }) } } }
         compose.waitUntil(60_000) { status().startsWith("Toque") || failed() }
-        SystemClock.sleep(2_000)
+        SystemClock.sleep(6_000)
         shot("$id-1-pronto")
         assertTrue("Player não ficou pronto: ${status()}", !failed())
-        compose.onNodeWithTag("yt-player").performClick()
-        compose.waitUntil(60_000) { playing.get() || failed() }
+        // A real tap on the official big play button (center), retried once in case the first tap only shows controls.
+        for (attempt in 1..3) {
+            if (playing.get() || failed()) break
+            compose.onNodeWithTag("yt-player").performTouchInput { click(center) }
+            runCatching { compose.waitUntil(20_000) { playing.get() || failed() } }
+            if (!playing.get()) shot("$id-tap$attempt")
+        }
         SystemClock.sleep(8_000)
         shot("$id-2-tocando")
         println("[playback] $id -> ${status()}")

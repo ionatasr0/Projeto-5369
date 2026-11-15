@@ -22,7 +22,7 @@ class LiveYouTubeTest {
         println("[$label] renderers: " + counts.entries.sortedByDescending { it.value }.take(25).joinToString { "${it.key}=${it.value}" })
     }
 
-    @Test fun searchReturnsLongVideosAndPaginates() = runBlocking {
+    @Test fun searchReturnsLongVideosAndPaginates() { runBlocking {
         assumeTrue(live)
         val first = catalog.search("documentário completo")
         println("[search] ${first.items.size} vídeos, próxima página: ${first.next != null}")
@@ -35,9 +35,9 @@ class LiveYouTubeTest {
         println("[search p2] ${second.items.size} vídeos")
         assertTrue(second.items.isNotEmpty(), "A segunda página veio vazia")
         assertTrue(second.items.map { it.id }.intersect(first.items.map { it.id }.toSet()).size < second.items.size)
-    }
+    } }
 
-    @Test fun detailsAndChannelLoad() = runBlocking {
+    @Test fun detailsAndChannelLoad() { runBlocking {
         assumeTrue(live)
         val hit = catalog.search("palestra ciência").items.first { it.channelId != null }
         val details = catalog.video(hit.id)
@@ -46,18 +46,18 @@ class LiveYouTubeTest {
         val channel = catalog.channel(hit.channelId!!)
         println("[channel] ${channel.channel.title} | ${channel.videos.items.size} vídeos | next=${channel.videos.next != null}")
         assertTrue(channel.videos.items.isNotEmpty(), "Canal sem vídeos")
-    }
+    } }
 
-    @Test fun shortsSearchIsReadable() = runBlocking {
+    @Test fun shortsSearchIsReadable() { runBlocking {
         assumeTrue(live)
         val shorts = catalog.shorts("ônibus")
         println("[shorts] ${shorts.items.size} shorts")
         shorts.items.take(5).forEach { println("  - ${it.id} | ${it.title} | ${it.thumbnail.take(60)}") }
         assertTrue(shorts.items.size >= 3, "Poucos Shorts lidos: ${shorts.items.size}")
         assertTrue(shorts.items.all { it.isShort })
-    }
+    } }
 
-    @Test fun schemaReport() = runBlocking {
+    @Test fun schemaReport() { runBlocking {
         assumeTrue(live)
         // Diagnostic only: which renderer types the current public pages use.
         val html = catalog.rawForDiagnostics("results", mapOf("search_query" to "documentário completo", "hl" to "pt", "gl" to "BR"))
@@ -72,5 +72,5 @@ class LiveYouTubeTest {
         YouTubeParser.objects(root).firstNotNullOfOrNull { it["reelItemRenderer"] as? JsonObject }?.let {
             println("[reelItemRenderer sample] " + it.toString().take(2500))
         }
-    }
+    } }
 }

@@ -12,6 +12,13 @@ data class CatalogState(
     val loading: Boolean = false, val error: String? = null, val cursor: Cursor? = null,
     val channel: Channel? = null,
 )
+data class Topic(val label: String, val query: String)
+val HOME_TOPICS = listOf(
+    Topic("Tudo","documentário completo ciência história"), Topic("Documentários","documentário completo"),
+    Topic("Ciência","palestra ciência"), Topic("História","história documentário completo"), Topic("Música","show completo ao vivo"),
+    Topic("Ônibus","viagem de ônibus"), Topic("Tecnologia","tecnologia análise completa"),
+)
+val SHORTS_TOPICS = listOf(Topic("Para você","curiosidades"), Topic("Ônibus","ônibus"), Topic("Tecnologia","tecnologia"), Topic("Humor","humor"), Topic("Música","música"))
 class AppViewModel(app: Application): AndroidViewModel(app) {
     private val catalog: Catalog = YouTubeCatalog()
     private val store = LocalStore(app)
@@ -19,6 +26,10 @@ class AppViewModel(app: Application): AndroidViewModel(app) {
     private val mutableHome = MutableStateFlow(CatalogState())
     private val mutableSearch = MutableStateFlow(CatalogState(heading="Resultados"))
     private val mutableChannel = MutableStateFlow(CatalogState(heading="Canal"))
+    private val mutableShorts = MutableStateFlow(CatalogState(heading="Shorts"))
+    val shortsState = mutableShorts.asStateFlow()
+    private val mutableTopic = MutableStateFlow(HOME_TOPICS.first())
+    val topic = mutableTopic.asStateFlow()
     val homeState = mutableHome.asStateFlow()
     val searchState = mutableSearch.asStateFlow()
     val channelState = mutableChannel.asStateFlow()
@@ -30,13 +41,24 @@ class AppViewModel(app: Application): AndroidViewModel(app) {
     private val reload = mutableMapOf<String,() -> Unit>()
     private var detailRequest: Job? = null
     init { home() }
-    private fun feed(key: String) = when(key) { "home" -> mutableHome; "channel" -> mutableChannel; else -> mutableSearch }
-    fun home() { if(mutableHome.value.items.isEmpty() && !mutableHome.value.loading) search("documentário completo ciência história",false) }
+    private fun feed(key: String) = when(key) { "home" -> mutableHome; "channel" -> mutableChannel; "shorts" -> mutableShorts; else -> mutableSearch }
+    fun home() { if(mutableHome.value.items.isEmpty() && !mutableHome.value.loading) search(mutableTopic.value.query,false) }
+    /** Themed selection chips on Início: a public search per theme, never presented as personal recommendations. */
+    fun topic(topic: Topic) { if(topic == mutableTopic.value && mutableHome.value.items.isNotEmpty()) return; mutableTopic.value=topic; search(topic.query,false) }
+    fun shorts(query: String = SHORTS_TOPICS.first().query, force: Boolean = false) {
+        if(!force && mutableShorts.value.heading == query && (mutableShorts.value.items.isNotEmpty() || mutableShorts.value.loading)) return
+        reload["shorts"] = { shorts(query,true) }; jobs["shorts"]?.cancel()
+        mutableShorts.value = CatalogState(heading=query,loading=true)
+        jobs["shorts"] = viewModelScope.launch { load(mutableShorts,fetch={ catalog.shorts(query) }) }
+    }
+    fun glass(enabled: Boolean) { viewModelScope.launch { persist { it.copy(glass=enabled) } } }
+    fun follow(channel: Channel) { viewModelScope.launch { persist { it.follow(channel) } } }
+    fun forgetSearch(query: String) { viewModelScope.launch { persist { it.forget(query) } } }
     fun search(query: String, save: Boolean = true) {
         if(query.isBlank()) return
         val key = if(save) "search" else "home"; val target=feed(key)
         reload[key] = { search(query,save) }; jobs[key]?.cancel()
-        target.value = CatalogState(heading=if(save) "Resultados: $query" else "Seleção por tema • vídeos longos",loading=true)
+        target.value = CatalogState(heading=if(save) query else mutableTopic.value.label,loading=true)
         jobs[key] = viewModelScope.launch {
             if(save) persist { it.searched(query) }
             load(target,fetch={ catalog.search(query) })
@@ -82,7 +104,7 @@ class AppViewModel(app: Application): AndroidViewModel(app) {
         }
     }
     fun selected(id: String): Video = detail.value?.takeIf { it.id == id } ?: library.value.favorites.firstOrNull { it.id == id }
-        ?: library.value.history.firstOrNull { it.id == id } ?: (homeState.value.items + searchState.value.items + channelState.value.items).firstOrNull { it.id == id }
+        ?: library.value.history.firstOrNull { it.id == id } ?: (homeState.value.items + searchState.value.items + channelState.value.items + shortsState.value.items).firstOrNull { it.id == id }
         ?: Video(id,"Vídeo $id",thumbnail="https://i.ytimg.com/vi/$id/hqdefault.jpg")
     fun favorite(video: Video) { viewModelScope.launch { persist { it.favorite(video) } } }
     fun watched(video: Video) { viewModelScope.launch { persist { it.watched(video) } } }
