@@ -28,7 +28,7 @@ jobs:
         run: |
           mkdir -p out
           set -o pipefail
-          ./gradlew :core:test -Pyt.live=true :app:testDebugUnitTest :app:assembleDebug :app:assembleDebugAndroidTest --console=plain 2>&1 | tee out/build.log
+          ./gradlew :core:test -Pyt.live=true :app:testDebugUnitTest :app:lintDebug :app:assembleDebug :app:assembleDebugAndroidTest --console=plain 2>&1 | tee out/build.log
           echo "${PIPESTATUS[0]}" > out/build.status
         continue-on-error: true
       - name: Enable KVM
@@ -53,7 +53,7 @@ jobs:
         shell: bash
         run: |
           mkdir -p out/reports
-          cp -r core/build/test-results out/reports/core 2>/dev/null || true
+          cp -r core/build/test-results out/reports/core 2>/dev/null || true; cp app/build/reports/lint-results-debug.txt out/ 2>/dev/null || true
           cp -r app/build/outputs/androidTest-results out/reports/device 2>/dev/null || true
           cp -r app/build/outputs/connected_android_test_additional_output out/shots-extra 2>/dev/null || true
           APK=app/build/outputs/apk/debug/app-debug.apk
