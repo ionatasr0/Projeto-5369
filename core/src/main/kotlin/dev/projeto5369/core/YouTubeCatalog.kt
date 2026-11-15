@@ -88,7 +88,13 @@ class YouTubeCatalog(
     }
     override suspend fun video(id: String): Video = withContext(Dispatchers.Default) {
         require(videoId(id) == id)
-        YouTubeParser.details(request("watch",mapOf("v" to id,"hl" to "pt")),id)
+        try { YouTubeParser.details(request("watch",mapOf("v" to id,"hl" to "pt")),id) }
+        catch(e: CatalogException) {
+            if(e.kind != CatalogException.Kind.UNAVAILABLE) throw e
+            // The watch page can omit videoDetails (e.g. bot checks). YouTube's public oEmbed still gives title and channel.
+            val o = runCatching { YouTubeParser.parse(request("oembed",mapOf("url" to "https://www.youtube.com/watch?v=$id","format" to "json"))) }.getOrNull() ?: throw e
+            Video(id,YouTubeParser.string(o,"title").ifBlank { throw e },YouTubeParser.string(o,"author_name"),null,null,"https://i.ytimg.com/vi/$id/hqdefault.jpg")
+        }
     }
     override suspend fun channel(id: String): ChannelPage = withContext(Dispatchers.Default) {
         require(Regex("UC[A-Za-z0-9_-]{22}").matches(id))

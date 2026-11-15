@@ -81,6 +81,9 @@ class LiveYouTubeTest {
         val html = catalog.rawForDiagnostics("results", mapOf("search_query" to "documentário completo", "hl" to "pt", "gl" to "BR"))
         println("[results] html=${html.length} chars, ytInitialData=${html.contains("ytInitialData")}, context=${YouTubeParser.context(html) != null}")
         report("results", YouTubeParser.initial(html))
+        val watch = catalog.rawForDiagnostics("watch", mapOf("v" to "M7lc1UVf-VE", "hl" to "pt"))
+        println("[watch] len=${watch.length} playerResponse=${watch.contains("ytInitialPlayerResponse")} videoDetails=${watch.contains("\"videoDetails\"")} playability=" +
+            Regex("\"playabilityStatus\":\\{\"status\":\"([A-Z_]+)\"(,\"reason\":\"([^\"]*))?").find(watch)?.groupValues?.let { it[1] + " " + it[3] })
         val shortsHtml = catalog.rawForDiagnostics("results", mapOf("search_query" to "ônibus #shorts", "hl" to "pt", "gl" to "BR"))
         val root = YouTubeParser.initial(shortsHtml)
         report("results-shorts", root)

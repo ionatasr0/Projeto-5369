@@ -118,4 +118,17 @@ class CatalogTest {
         }
     }
 
+    @Test fun detailsFallBackToOEmbedWhenWatchPageHasNoDetails() = runBlocking {
+        MockWebServer().use { server ->
+            server.enqueue(MockResponse().setBody("""<script>var ytInitialPlayerResponse = {"playabilityStatus":{"status":"LOGIN_REQUIRED"}};</script>"""))
+            server.enqueue(MockResponse().setBody("""{"title":"Vídeo pelo oEmbed","author_name":"Canal Exemplo"}"""))
+            server.start()
+            val video = YouTubeCatalog(base = server.url("/")).video("aqz-KE-bpKQ")
+            assertEquals("Vídeo pelo oEmbed", video.title); assertEquals("Canal Exemplo", video.channel)
+            server.takeRequest(); assertTrue(server.takeRequest().path!!.startsWith("/oembed?url="))
+        }
+    }
+    @Test fun userAgentDoesNotTriggerMobileRedirect() {
+        assertFalse(USER_AGENT.contains("Android", ignoreCase = true)); assertFalse(USER_AGENT.contains("Mobile", ignoreCase = true))
+    }
 }

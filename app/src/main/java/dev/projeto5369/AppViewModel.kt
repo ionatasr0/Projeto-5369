@@ -98,7 +98,12 @@ class AppViewModel(app: Application): AndroidViewModel(app) {
     fun select(video: Video) {
         detailRequest?.cancel(); mutableDetail.value=video; mutableDetailError.value=null
         detailRequest=viewModelScope.launch {
-            try { mutableDetail.value=catalog.video(video.id) }
+            try {
+                val d = catalog.video(video.id)
+                // Keep what the list already knew when the details source is partial (oEmbed has no duration/channel id).
+                mutableDetail.value = d.copy(channel = d.channel.ifBlank { video.channel }, channelId = d.channelId ?: video.channelId,
+                    durationSeconds = d.durationSeconds ?: video.durationSeconds, description = d.description.ifBlank { video.description })
+            }
             catch(e: CancellationException) { throw e }
             catch(e: Exception) { mutableDetailError.value=if(e is CatalogException) e.message else "Metadados indisponíveis." }
         }

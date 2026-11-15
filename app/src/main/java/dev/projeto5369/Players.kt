@@ -44,14 +44,15 @@ import kotlinx.coroutines.delay
 internal object PlayerDebug {
     @Volatile var autoplayMuted = false
     @Volatile var lastTime = -1.0
+    @Volatile var host: String? = null
 }
-internal fun embeddedHtml(id: String, autoplayMuted: Boolean = false): String {
+internal fun embeddedHtml(id: String, autoplayMuted: Boolean = false, host: String? = null): String {
     require(videoId(id) == id)
     // Base URL identifies this Android package per YouTube embedded-player guidance.
     return """<!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"></head>
         <body style="margin:0;background:#000"><div id="player"></div>
         <script src="https://www.youtube.com/iframe_api"></script><script>
-        var player; function onYouTubeIframeAPIReady(){player=new YT.Player('player',{
+        var player; function onYouTubeIframeAPIReady(){player=new YT.Player('player',{${host?.let { "host:'$it'," } ?: ""}
         width:'100%',height:'100%',videoId:'$id',playerVars:{playsinline:1,origin:'https://dev.projeto5369'},
         events:{onReady:function(){P5369.event(5);${if(autoplayMuted) "player.mute();player.playVideo();" else ""}},onStateChange:function(e){P5369.event(e.data);if(e.data==1&&!window.t5369){window.t5369=setInterval(function(){P5369.time(player.getCurrentTime());},1000);}},onError:function(e){P5369.failure(e.data);}}});}
         </script><style>html,body,#player{width:100%;height:100%;position:absolute}</style></body></html>""".trimIndent()
@@ -131,7 +132,8 @@ fun YouTubePlayer(video: Video,onPlaying: () -> Unit,modifier: Modifier = Modifi
                 }
             }
             addJavascriptInterface(PlayerBridge(
-                { code -> Log.d("P5369Player","state $code"); post { playback=playerState(code); if(code == 1) onPlay() } },
+                // After onError YouTube still emits -1 (unstarted); keep the real error visible until the user retries.
+                { code -> Log.d("P5369Player","state $code"); post { if(playback != PlaybackState.ERROR || code == 1) { playback=playerState(code); if(code == 1) { error=null; onPlay() } } } },
                 { code -> Log.w("P5369Player","error $code"); post { playback=PlaybackState.ERROR; error=when(code) {
                     101,150 -> "O proprietário não permite incorporar este vídeo."
                     100 -> "Vídeo indisponível ou privado."
@@ -139,7 +141,7 @@ fun YouTubePlayer(video: Video,onPlaying: () -> Unit,modifier: Modifier = Modifi
                     else -> "O player oficial retornou o erro $code."
                 } } }
             ),"P5369")
-            loadDataWithBaseURL("https://dev.projeto5369/",embeddedHtml(video.id,PlayerDebug.autoplayMuted),"text/html","UTF-8",null)
+            loadDataWithBaseURL("https://dev.projeto5369/",embeddedHtml(video.id,PlayerDebug.autoplayMuted,PlayerDebug.host),"text/html","UTF-8",null)
         }
     }
     BackHandler(enabled = fullscreen) { chrome.onHideCustomView() }
