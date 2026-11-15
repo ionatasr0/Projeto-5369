@@ -98,4 +98,24 @@ class CatalogTest {
             YouTubeCatalog().next(Cursor("x","browse","""{"client":{"clientName":"ANDROID"}}"""))
         }.kind)
     }
+    @Test fun parsesModernChannelLockup() {
+        val data=YouTubeParser.parse("""{"contents":{"lockupViewModel":{"contentId":"aqz-KE-bpKQ","contentType":"LOCKUP_CONTENT_TYPE_VIDEO","metadata":{"lockupMetadataViewModel":{"title":{"content":"Long film"},"metadata":{"contentMetadataViewModel":{"metadataRows":[{"metadataParts":[{"text":{"content":"Channel"}}]}]}}}},"contentImage":{"thumbnailViewModel":{"image":{"sources":[{"url":"https://i.ytimg.com/vi/aqz-KE-bpKQ/hqdefault.jpg"}]},"overlays":[{"thumbnailOverlayBadgeViewModel":{"thumbnailBadges":[{"thumbnailBadgeViewModel":{"text":"30:00"}}]}}]}}}}}""")
+        val video=YouTubeParser.page(data,"browse",null).items.single()
+        assertEquals("Long film",video.title); assertEquals(1800L,video.durationSeconds); assertEquals("Channel",video.channel)
+    }
+    @Test fun rejectsOversizedResponse() = runBlocking {
+        MockWebServer().use {server ->
+            server.enqueue(MockResponse().setBody("x".repeat(8*1024*1024+1)));server.start()
+            val catalog=YouTubeCatalog(base=server.url("/"))
+            assertEquals(CatalogException.Kind.SCHEMA,assertFailsWith<CatalogException> {catalog.search("test")}.kind)
+        }
+    }
+    @Test fun refusesRepeatedContinuationToken() = runBlocking {
+        MockWebServer().use {server ->
+            server.enqueue(MockResponse().setBody(fixture("search.json")));server.start()
+            val cursor=Cursor("page-two","search",context)
+            assertEquals(CatalogException.Kind.SCHEMA,assertFailsWith<CatalogException> {YouTubeCatalog(base=server.url("/")).next(cursor)}.kind)
+        }
+    }
+
 }
