@@ -27,3 +27,7 @@ A amostra externa Big Buck Bunny é de (c) 2008 Blender Foundation, https://www.
 YouTube e Google são marcas de seus titulares. O player incorporado e as miniaturas são fornecidos por serviços externos. Este aplicativo não é um cliente oficial do YouTube.
 
 Nenhum código de SmartTube, MediaServiceCore, NewTube, Flow ou NewPipeExtractor foi copiado ou incluído. Licenças de referência documentadas em `docs/REFERENCES.md` não são atribuídas ao código original deste projeto.
+
+## Inter (fonte)
+
+Inter Regular, SemiBold e ExtraBold, © 2016-2023 The Inter Project Authors (https://github.com/rsms/inter). SIL Open Font License 1.1 — texto completo em `app/src/main/assets/licenses/Inter-OFL-1.1.txt`.

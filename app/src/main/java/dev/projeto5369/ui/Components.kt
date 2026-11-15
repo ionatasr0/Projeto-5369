@@ -210,7 +210,7 @@ enum class Tab(val route: String, val label: String) { STATS("stats", "Seu Tube"
 fun Hotbar(current: Tab?, onSelect: (Tab) -> Unit, modifier: Modifier = Modifier) {
     val c = LocalOnda.current
     Row(modifier.navigationBarsPadding().padding(horizontal = 12.dp, vertical = 10.dp).fillMaxWidth().height(66.dp)
-        .clip(RoundedCornerShape(33.dp)).background(if (c.glass) Color.White.copy(alpha = .12f) else Color(0xFF111113).copy(alpha = .96f))
+        .clip(RoundedCornerShape(33.dp)).background(if (c.glass) Color(0xFF0E2016).copy(alpha = .93f) else Color(0xFF111113).copy(alpha = .96f))
         .border(1.dp, c.border, RoundedCornerShape(33.dp)).testTag("hotbar"),
         horizontalArrangement = Arrangement.SpaceEvenly, verticalAlignment = Alignment.CenterVertically) {
         Tab.entries.forEach { tab ->

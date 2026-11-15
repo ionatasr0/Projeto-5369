@@ -2,7 +2,7 @@ plugins { id("com.android.application"); kotlin("android"); kotlin("plugin.seria
 android {
     namespace = "dev.projeto5369"
     compileSdk = 35
-    defaultConfig { applicationId = "dev.projeto5369"; minSdk = 26; targetSdk = 35; versionCode = 1; versionName = "0.1.0"; testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner" }
+    defaultConfig { applicationId = "dev.projeto5369"; minSdk = 26; targetSdk = 35; versionCode = 2; versionName = "0.2.0"; testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner" }
     buildFeatures { compose = true; buildConfig = true }
     compileOptions { sourceCompatibility = JavaVersion.VERSION_21; targetCompatibility = JavaVersion.VERSION_21 }
     testOptions { unitTests.isIncludeAndroidResources = true }

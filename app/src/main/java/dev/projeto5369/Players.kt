@@ -135,7 +135,7 @@ fun YouTubePlayer(video: Video,onPlaying: () -> Unit,modifier: Modifier = Modifi
                 // After onError YouTube still emits -1 (unstarted); keep the real error visible until the user retries.
                 { code -> Log.d("P5369Player","state $code"); post { if(playback != PlaybackState.ERROR || code == 1) { playback=playerState(code); if(code == 1) { error=null; onPlay() } } } },
                 { code -> Log.w("P5369Player","error $code"); post { playback=PlaybackState.ERROR; error=when(code) {
-                    101,150 -> "O proprietário não permite incorporar este vídeo."
+                    101,150 -> "O YouTube não liberou este vídeo no player incorporado (o dono bloqueou ou o YouTube pediu verificação). Abra no YouTube."
                     100 -> "Vídeo indisponível ou privado."
                     153 -> "O YouTube recusou a identificação do player incorporado (153)."
                     else -> "O player oficial retornou o erro $code."

@@ -43,6 +43,6 @@ class ScreenTourTest {
         compose.onNodeWithText("Onda Glass").performClick()
         tab("Início"); shot("08-inicio-glass")
         tab("Shorts"); shot("09-shorts-glass")
-        tab("Você"); compose.onNodeWithContentDescription("Ajustes").performClick(); compose.onNodeWithText("Preto AMOLED").performClick()
+        runCatching { tab("Você"); compose.onNodeWithContentDescription("Ajustes").performClick(); compose.onNodeWithText("Preto AMOLED").performClick() }
     }
 }

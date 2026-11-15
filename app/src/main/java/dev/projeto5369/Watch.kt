@@ -140,12 +140,12 @@ fun ShortsScreen(state: CatalogState, library: Library, onTopic: (String) -> Uni
                         }
                     }
                 }
-                Column(Modifier.align(Alignment.BottomEnd).padding(end = 12.dp, bottom = 200.dp), verticalArrangement = Arrangement.spacedBy(14.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                Column(Modifier.align(Alignment.BottomEnd).navigationBarsPadding().padding(end = 12.dp, bottom = 170.dp), verticalArrangement = Arrangement.spacedBy(14.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                     ShortAction(if (favorite) OndaIcons.HeartFilled else OndaIcons.Heart, if (favorite) "Salvo" else "Salvar", favorite) { onFavorite(v) }
                     ShortAction(OndaIcons.Share, "Enviar") { share(context, v) }
                     ShortAction(OndaIcons.External, "YouTube") { runCatching { context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/shorts/${v.id}"))) } }
                 }
-                Column(Modifier.align(Alignment.BottomStart).padding(start = 16.dp, end = 90.dp, bottom = 108.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                Column(Modifier.align(Alignment.BottomStart).navigationBarsPadding().padding(start = 16.dp, end = 90.dp, bottom = 100.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                     Text(v.title, style = OndaType.cardTitle.copy(fontSize = 15.sp), color = Color.White, maxLines = 2, overflow = TextOverflow.Ellipsis)
                     if (v.description.isNotBlank()) Text(v.description, style = OndaType.small, color = Color.White.copy(alpha = .75f), maxLines = 1)
                 }
