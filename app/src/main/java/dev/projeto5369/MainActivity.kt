@@ -61,7 +61,7 @@ fun App(vm: AppViewModel = viewModel()) {
         OndaBackground {
             NavHost(navController = nav, startDestination = "home", modifier = Modifier.fillMaxSize()) {
                 composable("home") {
-                    HomeScreen(homeState, library, topic, vm::topic, { vm.more("home") }, { vm.retry("home") }, ::open,
+                    HomeScreen(homeState, library, topic, { vm.topic(it) }, { vm.more("home") }, { vm.retry("home") }, ::open,
                         onSearch = { nav.tab("search") }, onSettings = { nav.navigate("settings") }, onRoute = { nav.navigate(it) })
                 }
                 composable("search") {
