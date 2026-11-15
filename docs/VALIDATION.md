@@ -1,3 +1,5 @@
+> Relatório histórico da primeira operação. Para a recuperação OndaTube 0.2.1, consultar [RECOVERY_RESULTS.md](RECOVERY_RESULTS.md) e [RECOVERY.md](RECOVERY.md).
+
 # Validação — Operação Primeiro APK
 
 Data: 15/11/2026. Repositório encontrado vazio, desenvolvimento em `dev/primeiro-apk`. Não houve substituição de implementação anterior.

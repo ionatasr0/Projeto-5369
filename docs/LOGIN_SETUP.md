@@ -10,7 +10,8 @@ O código anterior tinha apenas `OfficialOAuthPending`; não existiam pedido de 
 4. Criar cliente OAuth **Web application** no mesmo projeto. Copiar apenas o **client ID público**, terminado em `.apps.googleusercontent.com`. O Credential Manager usa esse ID como audiência. Não embutir client secret no APK.
 5. Compilar: `./gradlew :app:assembleDebug -PgoogleWebClientId=SEU_CLIENT_ID.apps.googleusercontent.com`. Alternativamente definir `googleWebClientId` no `~/.gradle/gradle.properties` do ambiente de compilação. Não é necessário compartilhar senha ou token.
 6. Conferir o certificado do APK gerado: `$ANDROID_HOME/build-tools/35.0.0/apksigner verify --print-certs app/build/outputs/apk/debug/app-debug.apk`. Registrar o SHA-1 exibido no cliente Android. `./gradlew :app:signingReport` também permite conferência.
-7. No aparelho com Google Play Services atualizado, abrir **Você → Ajustes → Conta Google → Entrar com o Google**.
+7. Em CI, a chave Debug padrão do runner pode mudar entre execuções. Para login e atualizações previsíveis, o proprietário precisa fornecer sua chave de assinatura estável por configuração segura do ambiente; não versionar keystore/senha. Sempre registrar o SHA-1 do APK efetivamente instalado.
+8. No aparelho com Google Play Services atualizado, abrir **Você → Ajustes → Conta Google → Entrar com o Google**.
 
 O APK sem `googleWebClientId` continua compilando e funcionando como visitante. O botão explica a configuração pendente; isso não é login validado.
 
