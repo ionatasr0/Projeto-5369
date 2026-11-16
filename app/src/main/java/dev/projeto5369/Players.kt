@@ -226,20 +226,20 @@ fun YouTubePlayer(video: Video,onPlaying: () -> Unit,modifier: Modifier = Modifi
     Column(modifier,verticalArrangement=Arrangement.spacedBy(10.dp)) {
         // Nothing is drawn over the official iframe: its controls, ads and restrictions stay intact.
         key(webView) {
-            AndroidView(factory={webView},modifier=Modifier.fillMaxWidth().aspectRatio(aspect).clip(RoundedCornerShape(22.dp)).background(Color.Black).testTag("yt-player"))
+            AndroidView(factory={webView},modifier=Modifier.fillMaxWidth().aspectRatio(aspect).background(Color.Black).testTag("yt-player"))
         }
-        Row(verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)) {
+        Row(Modifier.padding(horizontal=16.dp),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)) {
             Box(Modifier.size(8.dp).clip(CircleShape).background(when(playback) { PlaybackState.PLAYING -> Lime; PlaybackState.ERROR -> Danger; else -> onda.muted }))
             Text(modifier=Modifier.testTag("yt-status").weight(1f),style=OndaType.small,color=if(playback == PlaybackState.ERROR) Danger else onda.muted,text=when(playback) {
-                PlaybackState.LOADING -> "Carregando player oficial…"
+                PlaybackState.LOADING -> "Preparando vídeo…"
                 PlaybackState.READY -> "Toque em reproduzir no player."
-                PlaybackState.PLAYING -> "Reproduzindo no YouTube"
+                PlaybackState.PLAYING -> "Reproduzindo"
                 PlaybackState.PAUSED -> "Pausado"
                 PlaybackState.ENDED -> "Reprodução encerrada"
                 PlaybackState.ERROR -> error ?: "Não foi possível reproduzir."
             })
         }
-        if(playback == PlaybackState.ERROR || showOpenExternal) Row(horizontalArrangement=Arrangement.spacedBy(8.dp)) {
+        if(playback == PlaybackState.ERROR || showOpenExternal) Row(Modifier.fillMaxWidth().padding(horizontal=16.dp),horizontalArrangement=Arrangement.spacedBy(8.dp)) {
             if(playback == PlaybackState.ERROR) Pill("Tentar novamente",{ playback=PlaybackState.LOADING; error=null; attempt++ },primary=true)
             Pill("Abrir no YouTube",{ runCatching { context.startActivity(Intent(Intent.ACTION_VIEW,Uri.parse("https://www.youtube.com/watch?v=${video.id}"))) } },icon=OndaIcons.External)
         }

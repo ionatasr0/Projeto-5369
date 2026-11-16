@@ -77,7 +77,7 @@ internal class AccountSession(
     fun signIn(activity: Context, restore: Boolean = false) {
         if (job?.isActive == true) return
         if (!configured) {
-            mutableState.value = AuthState.ConfigurationRequired("Configure o cliente Google próprio para ativar o login. Consulte docs/LOGIN_SETUP.md.")
+            mutableState.value = AuthState.ConfigurationRequired("O login Google deste aplicativo ainda não foi configurado pelo desenvolvedor. Você pode continuar como visitante.")
             Log.i("P5369Auth", "stage=authorize error=configuration")
             return
         }

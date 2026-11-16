@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.*
 data class CatalogState(
     val heading: String = "Conteúdos longos", val items: List<Video> = emptyList(),
     val loading: Boolean = false, val error: String? = null, val cursor: Cursor? = null,
-    val channel: Channel? = null,
+    val channel: Channel? = null, val videoId: String? = null,
 )
 data class Topic(val label: String, val query: String)
 val HOME_TOPICS = listOf(
@@ -44,11 +44,42 @@ class AppViewModel(app: Application): AndroidViewModel(app) {
     private val jobs = mutableMapOf<String,Job>()
     private val reload = mutableMapOf<String,() -> Unit>()
     private var detailRequest: Job? = null
+    private val discoveryPreferences = app.getSharedPreferences("discovery", android.content.Context.MODE_PRIVATE)
+    private var edition = discoveryPreferences.getInt("edition", 0)
+    private val homeCursors = ArrayDeque<Cursor>()
+    private val mutableRelated = MutableStateFlow(CatalogState(heading="A seguir"))
+    val relatedState = mutableRelated.asStateFlow()
+    private var relatedRequest: Job? = null
     init { home() }
     private fun feed(key: String) = when(key) { "home" -> mutableHome; "channel" -> mutableChannel; "shorts" -> mutableShorts; else -> mutableSearch }
-    fun home() { if(mutableHome.value.items.isEmpty() && !mutableHome.value.loading) search(mutableTopic.value.query,false) }
+    fun home() { if(mutableHome.value.items.isEmpty() && !mutableHome.value.loading) refreshHome() }
+    fun refreshHome() {
+        val topic = mutableTopic.value
+        val previous = mutableHome.value.items.mapTo(mutableSetOf(), Video::id)
+        val watched = library.value.history.mapTo(mutableSetOf(), Video::id)
+        jobs["home"]?.cancel(); homeCursors.clear()
+        mutableHome.value = CatalogState(heading=topic.label, items=mutableHome.value.items, loading=true)
+        reload["home"] = ::refreshHome
+        val queries = discoveryQueries(topic.query, topic == HOME_TOPICS.first(), edition)
+        jobs["home"] = viewModelScope.launch {
+            try {
+                val results = coroutineScope { queries.map { query -> async {
+                    try { Result.success(catalog.search(query)) }
+                    catch(e: CancellationException) { throw e }
+                    catch(e: Exception) { Result.failure<Page<Video>>(e) }
+                } }.awaitAll() }
+                val pages = results.mapNotNull { it.getOrNull() }
+                if(pages.isEmpty()) throw (results.first().exceptionOrNull() ?: IllegalStateException())
+                homeCursors.addAll(pages.mapNotNull { it.next })
+                mutableHome.value = CatalogState(heading=topic.label,
+                    items=discoveryVideos(pages.map { it.items },previous,watched),cursor=homeCursors.firstOrNull())
+                edition = if(edition == Int.MAX_VALUE) 0 else edition + 1
+                discoveryPreferences.edit().putInt("edition",edition).apply()
+            } catch(e: CancellationException) { throw e } catch(e: Exception) { fail(mutableHome,e) }
+        }
+    }
     /** Themed selection chips on Início: a public search per theme, never presented as personal recommendations. */
-    fun topic(topic: Topic) { if(topic == mutableTopic.value && mutableHome.value.items.isNotEmpty()) return; mutableTopic.value=topic; search(topic.query,false) }
+    fun topic(topic: Topic) { mutableTopic.value=topic; refreshHome() }
     fun shorts(query: String = SHORTS_TOPICS.first().query, force: Boolean = false) {
         if(!force && mutableShorts.value.heading == query && (mutableShorts.value.items.isNotEmpty() || mutableShorts.value.loading)) return
         reload["shorts"] = { shorts(query,true) }; jobs["shorts"]?.cancel()
@@ -60,6 +91,7 @@ class AppViewModel(app: Application): AndroidViewModel(app) {
     fun forgetSearch(query: String) { viewModelScope.launch { persist { it.forget(query) } } }
     fun search(query: String, save: Boolean = true) {
         if(query.isBlank()) return
+        if(!save) { refreshHome(); return }
         val key = if(save) "search" else "home"; val target=feed(key)
         reload[key] = { search(query,save) }; jobs[key]?.cancel()
         target.value = CatalogState(heading=if(save) query else mutableTopic.value.label,loading=true)
@@ -92,25 +124,52 @@ class AppViewModel(app: Application): AndroidViewModel(app) {
         } catch(e: CancellationException) { throw e } catch(e: Exception) { fail(target,e) }
     }
     fun more(key: String) {
+        if(key == "home") { moreHome(); return }
         val target=feed(key); val cursor = target.value.cursor ?: return
         if(target.value.loading) return
         target.update { it.copy(loading=true,error=null) }
         jobs[key] = viewModelScope.launch { load(target,{ catalog.next(cursor) },true) }
     }
+    private fun moreHome() {
+        if(mutableHome.value.loading) return
+        val cursor = homeCursors.removeFirstOrNull() ?: return
+        mutableHome.update { it.copy(loading=true,error=null) }
+        jobs["home"] = viewModelScope.launch {
+            try {
+                val page = catalog.next(cursor)
+                page.next?.let(homeCursors::addLast)
+                mutableHome.update { it.copy(items=(it.items + page.items).distinctBy(Video::id),
+                    loading=false,cursor=homeCursors.firstOrNull()) }
+            } catch(e: CancellationException) { throw e } catch(e: Exception) {
+                homeCursors.addFirst(cursor); fail(mutableHome,e)
+            }
+        }
+    }
     fun retry(key: String) { if(feed(key).value.items.isNotEmpty() && feed(key).value.cursor != null) more(key) else reload[key]?.invoke() }
     private fun fail(target: MutableStateFlow<CatalogState>,e: Exception) { target.update { it.copy(loading=false,error=if(e is CatalogException) e.message else "Não foi possível carregar o catálogo. Tente novamente.") } }
     fun select(video: Video) {
         detailRequest?.cancel(); mutableDetail.value=video; mutableDetailError.value=null
+        loadRelated(video)
         detailRequest=viewModelScope.launch {
             try {
                 android.util.Log.i("P5369Player", "video=${video.id} stage=metadata")
                 val d = catalog.video(video.id)
-                // Keep what the list already knew when the details source is partial (oEmbed has no duration/channel id).
                 mutableDetail.value = d.copy(channel = d.channel.ifBlank { video.channel }, channelId = d.channelId ?: video.channelId,
                     durationSeconds = d.durationSeconds ?: video.durationSeconds, description = d.description.ifBlank { video.description })
             }
             catch(e: CancellationException) { throw e }
             catch(e: Exception) { android.util.Log.w("P5369Player", "video=${video.id} stage=metadata category=${(e as? CatalogException)?.kind ?: "unknown"}"); mutableDetailError.value=if(e is CatalogException) e.message else "Metadados indisponíveis." }
+        }
+    }
+    fun ensureRelated(video: Video) { if(mutableRelated.value.videoId != video.id) loadRelated(video) }
+    private fun loadRelated(video: Video) {
+        relatedRequest?.cancel()
+        mutableRelated.value=CatalogState(heading="A seguir",loading=true,videoId=video.id)
+        relatedRequest=viewModelScope.launch {
+            try {
+                val page=catalog.search(relatedQuery(video))
+                mutableRelated.value=CatalogState(heading="A seguir",videoId=video.id,items=page.items.filter { it.id != video.id && !it.isShort }.distinctBy(Video::id))
+            } catch(e: CancellationException) { throw e } catch(e: Exception) { fail(mutableRelated,e) }
         }
     }
     fun selected(id: String): Video = detail.value?.takeIf { it.id == id } ?: library.value.favorites.firstOrNull { it.id == id }

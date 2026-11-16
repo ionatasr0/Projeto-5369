@@ -86,7 +86,7 @@ jobs:
           arch: x86_64
           profile: pixel_2
           disable-animations: true
-          script: ./gradlew :app:connectedDebugAndroidTest --stacktrace --console=plain
+          script: bash -c 'set +e; ./gradlew :app:connectedDebugAndroidTest --stacktrace --console=plain; result=$?; mkdir -p ui-shots; for name in ui-home.png ui-watch.png; do adb exec-out run-as dev.projeto5369 cat files/$name > ui-shots/$name; done; exit $result'
       - name: Device test reports
         if: always()
         uses: actions/upload-artifact@v4
@@ -95,6 +95,7 @@ jobs:
           path: |
             app/build/reports/androidTests/
             app/build/outputs/androidTest-results/
+            ui-shots/
           retention-days: 7
 
   live-youtube:

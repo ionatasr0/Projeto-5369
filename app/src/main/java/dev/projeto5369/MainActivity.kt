@@ -49,6 +49,7 @@ fun App(vm: AppViewModel = viewModel()) {
     val channelState by vm.channelState.collectAsStateWithLifecycle()
     val shortsState by vm.shortsState.collectAsStateWithLifecycle()
     val topic by vm.topic.collectAsStateWithLifecycle()
+    val relatedState by vm.relatedState.collectAsStateWithLifecycle()
     val detail by vm.detail.collectAsStateWithLifecycle()
     val detailError by vm.detailError.collectAsStateWithLifecycle()
     fun open(video: Video) { vm.select(video); nav.navigate("video/${video.id}") }
@@ -65,7 +66,7 @@ fun App(vm: AppViewModel = viewModel()) {
             NavHost(navController = nav, startDestination = "home", modifier = Modifier.fillMaxSize()) {
                 composable("home") {
                     HomeScreen(homeState, library, topic, { vm.topic(it) }, { vm.more("home") }, { vm.retry("home") }, ::open,
-                        onSearch = { nav.tab("search") }, onSettings = { nav.navigate("settings") }, onRoute = { nav.navigate(it) })
+                        onSearch = { nav.tab("search") }, onSettings = { nav.navigate("settings") }, onRoute = { nav.navigate(it) }, onRefresh = vm::refreshHome)
                 }
                 composable("search") {
                     SearchScreen(library.recentSearches, onSearch = { q -> vm.search(q); nav.navigate("results") },
@@ -82,14 +83,16 @@ fun App(vm: AppViewModel = viewModel()) {
                 composable("video/{id}", arguments = listOf(navArgument("id") { type = NavType.StringType })) { entry ->
                     val id = entry.arguments!!.getString("id")!!
                     val video = detail?.takeIf { it.id == id } ?: vm.selected(id)
-                    val upNext = (searchState.items + homeState.items + channelState.items).filter { it.id != id && !it.isShort }.distinctBy { it.id }.take(12)
+                    LaunchedEffect(id) { vm.ensureRelated(video) }
+                    val upNext = relatedState.takeIf { it.videoId == id }?.items.orEmpty().filter { it.id != id }.take(20)
                     WatchScreen(video, detailError, library, upNext, onPlaying = { vm.watched(video) }, onFavorite = { vm.favorite(video) },
                         onFollow = vm::follow, onChannel = { nav.navigate("channel/$it") }, open = ::open, onBack = { nav.popBackStack() })
                 }
                 composable("player/{id}", arguments = listOf(navArgument("id") { type = NavType.StringType })) { entry ->
                     val id = entry.arguments!!.getString("id")!!
                     val video = vm.selected(id)
-                    WatchScreen(video, detailError, library, emptyList(), onPlaying = { vm.watched(video) }, onFavorite = { vm.favorite(video) },
+                    LaunchedEffect(id) { vm.ensureRelated(video) }
+                    WatchScreen(video, detailError, library, relatedState.takeIf { it.videoId == id }?.items.orEmpty().filter { it.id != id }.take(20), onPlaying = { vm.watched(video) }, onFavorite = { vm.favorite(video) },
                         onFollow = vm::follow, onChannel = { nav.navigate("channel/$it") }, open = ::open, onBack = { nav.popBackStack() })
                 }
                 composable("shorts") {

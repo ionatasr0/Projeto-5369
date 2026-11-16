@@ -10,6 +10,13 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class NavigationTest {
     @get:Rule val compose=createAndroidComposeRule<MainActivity>()
+    private fun screenshot(name: String) {
+        val instrumentation=androidx.test.platform.app.InstrumentationRegistry.getInstrumentation()
+        val bitmap=instrumentation.uiAutomation.takeScreenshot() ?: return
+        java.io.File(instrumentation.targetContext.filesDir,name).outputStream().use {
+            bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG,100,it)
+        }
+    }
     private fun tab(name: String) = compose.onNode(hasContentDescription(name) and hasAnyAncestor(hasTestTag("hotbar"))).performClick()
 
     @Test fun searchLinkValidationAndLocalSettings() {
@@ -26,6 +33,7 @@ class NavigationTest {
         compose.onNodeWithText("Duração mínima").assertIsDisplayed()
         tab("Início")
         compose.onNodeWithText("Início").assertIsDisplayed()
+        screenshot("ui-home.png")
     }
 
     @Test fun opensVideoDetailsWithoutCatalogAndSavesFavorite() {
@@ -37,6 +45,7 @@ class NavigationTest {
         compose.onNodeWithTag("watch-list").performScrollToNode(hasText("Favoritar no aparelho"))
         compose.onNodeWithText("Favoritar no aparelho").performClick()
         compose.waitUntil(timeoutMillis=5_000) { compose.onAllNodesWithText("Remover dos favoritos").fetchSemanticsNodes().isNotEmpty() }
+        screenshot("ui-watch.png")
         compose.onNodeWithContentDescription("Voltar").performClick()
         tab("Você")
         compose.onNodeWithTag("library-list").performScrollToNode(hasText("Favoritos locais"))

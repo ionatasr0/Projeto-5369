@@ -75,6 +75,16 @@ class LiveYouTubeTest {
         assertTrue(shorts.items.all { it.isShort })
     } }
 
+    @Test fun mixedDiscoveryHasUniqueVideosFromMultipleQueries() { runBlocking {
+        assumeTrue(live)
+        val queries=discoveryQueries("unused",true,0)
+        val pages=queries.map { catalog.search(it).items }
+        val feed=discoveryVideos(pages,emptySet(),emptySet())
+        println("[discovery] sources=${pages.map { it.size }} unique=${feed.size}")
+        assertTrue(feed.size >= 10)
+        assertEquals(feed.size,feed.map { it.id }.distinct().size)
+        assertTrue(feed.map { it.channel }.distinct().size >= 3)
+    } }
     @Test fun schemaReport() { runBlocking {
         assumeTrue(live)
         // Diagnostic only: which renderer types the current public pages use.

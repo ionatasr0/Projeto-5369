@@ -71,9 +71,9 @@ private fun androidx.compose.foundation.lazy.LazyListScope.catalogStates(state: 
 
 @Composable
 fun HomeScreen(state: CatalogState, library: Library, topic: Topic, onTopic: (Topic) -> Unit, more: () -> Unit, retry: () -> Unit, open: (Video) -> Unit,
-               onSearch: () -> Unit, onSettings: () -> Unit, onRoute: (String) -> Unit) {
+               onSearch: () -> Unit, onSettings: () -> Unit, onRoute: (String) -> Unit, onRefresh: () -> Unit = {}) {
     val c = LocalOnda.current
-    val visible = remember(state.items, library) { library.visible(state.items) }
+    val visible = remember(state.items, library) { library.visible(state.items).filterNot { candidate -> library.history.take(12).any { it.id == candidate.id } } }
     val list = rememberLazyListState()
     AutoMore(list, state, visible.size, more)
     LazyColumn(Modifier.fillMaxSize().testTag("home-list"), state = list, contentPadding = BottomSpace) {
@@ -88,8 +88,10 @@ fun HomeScreen(state: CatalogState, library: Library, topic: Topic, onTopic: (To
             LazyRow(contentPadding = PaddingValues(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 items(HOME_TOPICS, key = { it.label }) { t -> Pill(t.label, { onTopic(t) }, selected = t == topic) }
             }
-            Text("Seleção por tema a partir de buscas públicas · não é recomendação personalizada do YouTube · filtro local ${library.minimumMinutes}+ min",
-                style = OndaType.small, color = c.muted, modifier = Modifier.padding(horizontal = 20.dp, vertical = 10.dp))
+            Row(Modifier.fillMaxWidth().padding(horizontal=16.dp,vertical=10.dp),verticalAlignment=Alignment.CenterVertically) {
+                Text("Descobertas por tema · ${library.minimumMinutes}+ min",style=OndaType.small,color=c.muted,modifier=Modifier.weight(1f))
+                Pill(if(state.loading) "Atualizando…" else "Atualizar",onRefresh,enabled=!state.loading)
+            }
         }
         visible.firstOrNull()?.let { first -> item("featured-${first.id}") { FeaturedVideo(first, "EM DESTAQUE · ${topic.label.uppercase()}") { open(first) } } }
         if (library.history.isNotEmpty()) item("continue") {
@@ -268,7 +270,7 @@ fun LibraryScreen(library: Library, open: (Video) -> Unit, onList: (String) -> U
                         contentAlignment = Alignment.Center) { Icon(OndaIcons.User, null, tint = Color.Black, modifier = Modifier.size(28.dp)) }
                     Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
                         Text((accountState as? AuthState.SignedIn)?.displayName ?: "Visitante", style = OndaType.title, color = c.text)
-                        Text("Conta e login em Ajustes. Biblioteca salva neste aparelho.", style = OndaType.small, color = c.muted)
+                        Text("Sua biblioteca fica salva neste aparelho. Conta Google em Ajustes.", style = OndaType.small, color = c.muted)
                     }
                 }
             }
@@ -449,7 +451,7 @@ fun SettingsScreen(library: Library, preferences: (Int, Boolean) -> Unit, glass:
             Pill("Testar Media3 com amostra autorizada", onDemo)
         } }
         item("about") { Card("Sobre") {
-            Text("OndaTube 0.2.1 · ecossistema Onda · JoojDevs\nBase técnica: Projeto 5369. Sem recomendações personalizadas oficiais; Shorts ficam fora do catálogo de vídeos longos.", style = OndaType.small, color = c.muted)
+            Text("OndaTube 0.2.2 · ecossistema Onda · JoojDevs\nBase técnica: Projeto 5369. Sem recomendações personalizadas oficiais; Shorts ficam fora do catálogo de vídeos longos.", style = OndaType.small, color = c.muted)
         } }
         item("licenses") { Card("Licenças de dependências") {
             Text("AndroidX/Compose/Media3/DataStore/Credential Manager: Apache 2.0\nGoogle ID/Play Services: Android SDK License\nKotlin e kotlinx: Apache 2.0\nOkHttp: Apache 2.0\nCoil: Apache 2.0\nProtobuf transitivo do DataStore: BSD 3-Clause\nFonte Inter: SIL Open Font License 1.1\nNenhum código GPL dos clientes de referência incorporado.", style = OndaType.small, color = c.muted)

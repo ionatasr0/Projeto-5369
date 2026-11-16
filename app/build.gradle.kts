@@ -3,7 +3,7 @@ val googleWebClientId = providers.gradleProperty("googleWebClientId").orElse("")
 android {
     namespace = "dev.projeto5369"
     compileSdk = 35
-    defaultConfig { applicationId = "dev.projeto5369"; minSdk = 26; targetSdk = 35; versionCode = 3; versionName = "0.2.1"; testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner" }
+    defaultConfig { applicationId = "dev.projeto5369"; minSdk = 26; targetSdk = 35; versionCode = 4; versionName = "0.2.2"; testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner" }
     defaultConfig { buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", "\"${googleWebClientId.get().also { require(it.isEmpty() || Regex("[A-Za-z0-9.-]+\\.apps\\.googleusercontent\\.com").matches(it)) }}\"") }
     buildFeatures { compose = true; buildConfig = true }
     compileOptions { sourceCompatibility = JavaVersion.VERSION_21; targetCompatibility = JavaVersion.VERSION_21 }

@@ -51,19 +51,14 @@ fun WatchScreen(video: Video, detailError: String?, library: Library, upNext: Li
             modifier = Modifier.fillMaxWidth().height(460.dp).blur(60.dp).alpha(if (c.glass) .55f else .4f))
         else Box(Modifier.fillMaxWidth().height(460.dp).background(Brush.verticalGradient(listOf(tintFor(video.id).copy(alpha = .6f), Color.Transparent))))
         Box(Modifier.fillMaxWidth().height(460.dp).background(Brush.verticalGradient(listOf(Color.Transparent, c.background))))
-        LazyColumn(Modifier.fillMaxSize().testTag("watch-list"), contentPadding = PaddingValues(bottom = 40.dp)) {
-            item("top") {
-                Row(Modifier.fillMaxWidth().statusBarsPadding().padding(horizontal = 12.dp, vertical = 10.dp), verticalAlignment = Alignment.CenterVertically) {
-                    CircleIcon(OndaIcons.Chevron, "Voltar", onBack)
-                    Text("PLAYER OFICIAL DO YOUTUBE", style = OndaType.label, color = Color.White.copy(alpha = .75f), modifier = Modifier.weight(1f), textAlign = androidx.compose.ui.text.style.TextAlign.Center)
-                    CircleIcon(OndaIcons.Share, "Compartilhar", { share(context, video) })
-                }
+        Column(Modifier.fillMaxSize()) {
+            Row(Modifier.fillMaxWidth().statusBarsPadding().padding(horizontal=12.dp,vertical=8.dp),verticalAlignment=Alignment.CenterVertically) {
+                CircleIcon(OndaIcons.Chevron,"Voltar",onBack)
+                Text("OndaTube",style=OndaType.cardTitle,color=c.text,modifier=Modifier.weight(1f).padding(horizontal=14.dp))
+                CircleIcon(OndaIcons.Share,"Compartilhar",{ share(context,video) })
             }
-            item("player") {
-                Box(Modifier.padding(horizontal = 10.dp).then(if (c.glass) Modifier.clip(RoundedCornerShape(28.dp)).background(c.surfaceStrong).border(1.dp, c.border, RoundedCornerShape(28.dp)).padding(6.dp) else Modifier)) {
-                    YouTubePlayer(video, onPlaying = onPlaying, showOpenExternal = false)
-                }
-            }
+            YouTubePlayer(video,onPlaying=onPlaying,showOpenExternal=true,modifier=Modifier.fillMaxWidth())
+            LazyColumn(Modifier.weight(1f).fillMaxWidth().testTag("watch-list"),contentPadding=PaddingValues(bottom=32.dp)) {
             item("info") {
                 OndaSurface(Modifier.padding(start = 10.dp, end = 10.dp, top = 12.dp).fillMaxWidth(), RoundedCornerShape(28.dp), strong = c.glass) {
                     Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
@@ -82,7 +77,6 @@ fun WatchScreen(video: Video, detailError: String?, library: Library, upNext: Li
                         }
                         LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                             item { Pill(if (favorite) "Remover dos favoritos" else "Favoritar no aparelho", onFavorite, icon = if (favorite) OndaIcons.HeartFilled else OndaIcons.Heart, primary = favorite) }
-                            item { Pill("Abrir no YouTube", { runCatching { context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=${video.id}"))) } }, icon = OndaIcons.External) }
                             item { Pill("Compartilhar", { share(context, video) }, icon = OndaIcons.Share) }
                         }
                     }
@@ -99,8 +93,12 @@ fun WatchScreen(video: Video, detailError: String?, library: Library, upNext: Li
                 }
             }
             if (upNext.isNotEmpty()) {
-                item("next-title") { SectionHeader("A seguir") }
+                item("next-title") {
+                    SectionHeader("A seguir")
+                    Text("Mais vídeos sobre este assunto",style=OndaType.small,color=c.muted,modifier=Modifier.padding(horizontal=20.dp,vertical=4.dp))
+                }
                 items(upNext, key = { "n${it.id}" }) { v -> VideoRowCard(v) { open(v) } }
+            }
             }
         }
     }
