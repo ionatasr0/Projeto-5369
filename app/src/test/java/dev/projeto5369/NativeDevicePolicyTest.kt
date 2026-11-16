@@ -29,6 +29,12 @@ class NativeDevicePolicyTest {
         assertEquals(7000,OndaDevicePolicy.pollIntervalMs())
         assertEquals("https://www.google.com/device",OndaDevicePolicy.getVerificationUrl())
     }
+    @Test fun absentServerIntervalUsesFiveSeconds() {
+        val result=code()
+        UserCode::class.java.getDeclaredField("mInterval").apply { isAccessible=true }.set(result,0)
+        OndaDevicePolicy.observe(result)
+        assertEquals(5000,OndaDevicePolicy.pollIntervalMs())
+    }
     @Test fun expirationStopsPolling() {
         OndaDevicePolicy.observe(code()); ShadowSystemClock.advanceBy(Duration.ofSeconds(31))
         assertThrows(IllegalStateException::class.java) { OndaDevicePolicy.pollIntervalMs() }

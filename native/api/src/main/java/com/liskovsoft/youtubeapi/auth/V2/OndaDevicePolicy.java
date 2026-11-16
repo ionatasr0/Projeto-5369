@@ -18,7 +18,7 @@ public final class OndaDevicePolicy {
            !(host.equals("google.com") || host.endsWith(".google.com") || host.equals("youtube.com") || host.endsWith(".youtube.com"))) {
             throw new IllegalStateException("Unexpected authorization origin");
         }
-        intervalMs=Math.max(1,result.getInterval())*1000L;
+        intervalMs=result.getInterval() > 0 ? result.getInterval()*1000L : 5000L;
         if(result.getExpiresIn() <= 0) throw new IllegalStateException("Invalid device-code expiry");
         expiresAt=SystemClock.elapsedRealtime()+result.getExpiresIn()*1000L;
         verificationUrl=uri.toString();
