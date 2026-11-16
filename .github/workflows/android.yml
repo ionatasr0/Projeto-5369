@@ -86,7 +86,7 @@ jobs:
           arch: x86_64
           profile: pixel_2
           disable-animations: true
-          script: bash -c 'set +e; ./gradlew :app:connectedDebugAndroidTest --stacktrace --console=plain; result=$?; mkdir -p ui-shots; for name in ui-home.png ui-watch.png; do adb exec-out run-as dev.projeto5369 cat files/$name > ui-shots/$name; done; exit $result'
+          script: bash -c 'set +e; ./gradlew :app:connectedDebugAndroidTest -Pandroid.injected.androidTest.leaveApksInstalledAfterRun=true --stacktrace --console=plain; result=$?; mkdir -p ui-shots; for name in ui-home.png ui-watch.png; do adb exec-out run-as dev.projeto5369 cat files/$name > ui-shots/$name; done; exit $result'
       - name: Device test reports
         if: always()
         uses: actions/upload-artifact@v4
@@ -100,7 +100,7 @@ jobs:
 
   live-youtube:
     name: Reprodução real YouTube (diagnóstico externo)
-    if: github.ref == 'refs/heads/fix/login-video-playback'
+    if: github.ref == 'refs/heads/fix/login-video-playback' && github.event_name == 'workflow_dispatch'
     continue-on-error: true
     runs-on: ubuntu-24.04
     timeout-minutes: 20
