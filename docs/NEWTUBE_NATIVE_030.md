@@ -43,4 +43,33 @@ Clone/CI precisam baixar submódulos recursivamente. GoogleWebClientId/Credentia
 
 ## Validação
 
-Resultados de compilação, unitários, criptografia no dispositivo, emissão real de código e reprodução real serão registrados aqui após a execução. Emissão de código, estado de player e testes sintéticos não comprovam autorização completa de uma conta. O login integral depende de aprovação do proprietário; não será declarado validado sem isso.
+Validação em 16/11/2026, código `5251340b1212fff93e11090c4633a89c00448dee`, branch `fix/login-video-playback`:
+
+| Verificação | Resultado |
+| --- | --- |
+| Compilação local Debug, instrumentação, unitários e lint | BUILD SUCCESSFUL; 1 min 41 s; 294 tarefas |
+| Unitários | 39 aprovados; zero falhas/erros; seis testes externos opcionais ignorados |
+| Android lint | Zero erros; 14 avisos |
+| CI do código entregue | Build e navegação aprovados no [run 43795937462](https://github.com/ionatasr0/Projeto-5369/actions/runs/43795937462); diagnóstico live não solicitado nessa execução |
+| Emissão real de código de dispositivo e cancelamento | Aprovado em Android API 35 no [run 43794401941](https://github.com/ionatasr0/Projeto-5369/actions/runs/43794401941); código não exportado |
+| Preferências criptografadas no dispositivo | Aprovado, incluindo Android Keystore e ausência de valores simples no armazenamento |
+| Media3 com mídia de teste | Primeiro quadro e avanço de posição aprovados; não comprova YouTube |
+| YouTube real sem conta aprovada | Falhou antes de preparar a fonte; resposta categorizada como autorização/indisponibilidade; nenhum primeiro quadro |
+| Aprovação de conta, restauração, logout e novo login reais | Pendentes da autorização do proprietário no dispositivo |
+
+O teste live usa `continue-on-error`: um workflow verde não prova reprodução do YouTube. Na execução live citada, `playbackAdvancesInNativePlayer` falhou. O adaptador inicialmente agrupava bot-check e indisponibilidade; o código entregue distingue os dois, sem atribuir uma causa externa não comprovada. Também não foram validados os cenários completos de vídeos curto/longo/mais de uma hora, troca, seek e fullscreen com mídia real da plataforma.
+
+## Diagnóstico e arquivos principais
+
+O caminho anterior usava IFrame/WebView para os vídeos e identidade Google própria para a conta, sem integrar a sessão ao backend NewTube. Os relatórios históricos registram a corrida de inicialização/altura do IFrame e a recusa externa 150. A integração 0.3.0 substitui esses caminhos por conta do backend e player nativo; não transforma a recusa externa em sucesso. A repetição da Home já foi tratada na 0.2.2 por rotação das consultas, intercalação e deduplicação, preservadas nesta versão; a Home continua pública, sem recomendação personalizada oficial.
+
+Principais arquivos: `app/src/main/java/dev/projeto5369/Auth.kt`, `nativeplayer/NewTubeBackend.kt`, `NativePlayer.kt`, `nativeplayer/NativeSources.kt`, telas Compose e ViewModel; módulos `native/*`, `settings.gradle.kts`, Gradle do app e workflows Android. O diff completo está nos commits da branch: `24abed4` (integração), `c7fee09` (wrapper do CI), `d2e39c4` (recuperação de autorização/layout) e `5251340` (intervalo padrão de polling/teste). A validação dos wrappers permanece ativa; o CI remove apenas jars de wrappers upstream não usados pelo build do host.
+
+## APK entregue e próxima validação
+
+- `artifacts/OndaTube-0.3.0-native-debug.apk`, versão 0.3.0 (5), arm64-v8a, 37.085.820 bytes.
+- SHA-256 do arquivo: `636ab8b35ab26580ce28ea7467ae5398e6354e5e220777da744f8400717c37dd`.
+- Assinatura Debug preservada em relação às versões 0.2.1/0.2.2; SHA-256 do certificado: `daed4c8b11429668992b853ed030d71a156f447235323b11a028888223592112`.
+- APK entregue diretamente ao proprietário; nenhuma Release publicada automaticamente.
+
+No M34: abrir Você → Ajustes → Conta YouTube → Entrar; revisar a autorização na página Google indicada, inserir o código e voltar ao app. O navegador é usado para autorizar a conta; o vídeo usa Media3 dentro do app. Depois, verificar reprodução pública e controles, reiniciar para restaurar a sessão, sair e entrar novamente. Login integral e reprodução pública permanecem critérios pendentes até esses resultados reais. Não é necessário fornecer um GoogleWebClientId para o fluxo ativo desta versão.
