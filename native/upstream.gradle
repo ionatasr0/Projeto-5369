@@ -1,0 +1,135 @@
+apply plugin: 'com.android.library'
+if (project.name in ['newtube-api','newtube-shared']) apply plugin: 'org.jetbrains.kotlin.android'
+
+def locations = [
+ 'newtube-shared':'SharedModules/sharedutils', 'newtube-v8':'SharedModules/j2v8',
+ 'newtube-interfaces':'MediaServiceCore/mediaserviceinterfaces', 'newtube-api':'MediaServiceCore/youtubeapi',
+ 'newtube-sabr':'sabr-media3'
+]
+def upstream = rootProject.file('vendor/newtube/' + locations[project.name])
+def namespaces = ['newtube-shared':'com.liskovsoft.sharedutils', 'newtube-v8':'com.eclipsesource.v8',
+ 'newtube-interfaces':'com.liskovsoft.mediaserviceinterfaces','newtube-api':'com.liskovsoft.youtubeapi','newtube-sabr':'com.newtube.sabr']
+
+def prepare = tasks.register('prepareUpstreamSources', Copy) {
+ inputs.property('hostPatchVersion',4)
+ from(new File(upstream,'src/main/java'))
+ into(layout.buildDirectory.dir('generated/upstream'))
+ if(project.name == 'newtube-shared') exclude 'com/liskovsoft/sharedutils/mylogger/Log.java'
+ filter { String line ->
+  line.replace('android.util.Log', 'com.liskovsoft.sharedutils.mylogger.Log')
+      .replace('HttpLoggingInterceptor.Level.BASIC', 'HttpLoggingInterceptor.Level.NONE')
+      .replace('conn.hostnameVerifier = HostnameVerifier { _, _ -> true }', 'conn.hostnameVerifier = javax.net.ssl.HttpsURLConnection.getDefaultHostnameVerifier()')
+      .replaceAll(/\b\w+\.printStackTrace\(\);?/, '/* OndaTube: no upstream exception output */')
+      .replace('System.out.println(', 'com.liskovsoft.sharedutils.mylogger.Log.quiet(')
+      .replace('System.err.println(', 'com.liskovsoft.sharedutils.mylogger.Log.quiet(')
+      .replace('"isInlinePlaybackNoAd": true', '"isInlinePlaybackNoAd": false')
+ }
+ doLast {
+  if(project.name == 'newtube-api') {
+   def auth = new File(destinationDir, 'com/liskovsoft/youtubeapi/service/YouTubeSignInService.java')
+   auth.setText(auth.getText('UTF-8')
+    .replace('private AuthTokenCache mAuthTokenCache;', 'private AuthTokenCache mAuthTokenCache; private volatile boolean mAccountStoreLoaded; public boolean isAccountStoreLoaded() { return mAccountStoreLoaded; }')
+    .replace('mAccountManager.init();', 'mAccountManager.init(); mAccountStoreLoaded = true;'),'UTF-8')
+   def authFlow = new File(destinationDir, 'com/liskovsoft/youtubeapi/auth/V2/AuthService.java')
+   authFlow.setText(authFlow.getText('UTF-8')
+    .replaceFirst(java.util.regex.Pattern.quote('return RetrofitHelper.get(wrapper);'), java.util.regex.Matcher.quoteReplacement('return OndaDevicePolicy.observe(RetrofitHelper.get(wrapper));'))
+    .replace('Thread.sleep(REFRESH_TOKEN_ATTEMPT_INTERVAL_MS);', 'Thread.sleep(OndaDevicePolicy.pollIntervalMs());')
+    .replace('tokenResult = getAccessToken(deviceCode);', 'OndaDevicePolicy.ensureValid(); tokenResult = getAccessToken(deviceCode);')
+    .replace('if (tokenResult != null && tokenResult.getRefreshToken() != null) {', 'OndaDevicePolicy.checkResponse(tokenResult); if (tokenResult != null && tokenResult.getRefreshToken() != null) {'),'UTF-8')
+   def userCode = new File(destinationDir,'com/liskovsoft/googlecommon/common/models/auth/UserCode.java')
+   def rawCode = userCode.getText('UTF-8')
+   int codeStart = rawCode.indexOf('    public String getUserCode()')
+   int codeEnd = rawCode.indexOf('    public String getVerificationUrl()',codeStart)
+   if(codeStart < 0 || codeEnd < 0) throw new GradleException('Pinned code-display patch no longer matches')
+   userCode.setText(rawCode.substring(0,codeStart)+'    public String getUserCode() { return mUserCode; }\n\n'+rawCode.substring(codeEnd),'UTF-8')
+   def manager = new File(destinationDir, 'com/liskovsoft/youtubeapi/service/internal/YouTubeAccountManager.java')
+   manager.setText(manager.getText('UTF-8').replace('persistRefreshToken(token.getRefreshToken());','if (emitter.isDisposed()) return; persistRefreshToken(token.getRefreshToken());'),'UTF-8')
+  }
+  if(project.name == 'newtube-shared') {
+   def prefs = new File(destinationDir, 'com/liskovsoft/sharedutils/prefs/SharedPreferencesBase.java')
+   def source = prefs.getText('UTF-8')
+   int start = source.indexOf('    final public String getData(String key)')
+   int end = source.indexOf('    private File getStorageFile(String key)',start)
+   if(start < 0 || end < 0) throw new GradleException('Pinned preference patch no longer matches')
+   prefs.setText(source.substring(0,start) + '''    final public String getData(String key) { return getString(key, null); }
+    final public void setData(String key, String data) { putString(key, data); }
+
+''' + source.substring(end),'UTF-8')
+  }
+ }
+}
+android {
+ namespace namespaces[project.name]
+ compileSdk 36
+ defaultConfig { minSdk 26 }
+ compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
+ buildFeatures { buildConfig true }
+ if(project.plugins.hasPlugin('org.jetbrains.kotlin.android')) kotlinOptions { jvmTarget = '17' }
+ sourceSets.main {
+  java.srcDir(layout.buildDirectory.dir('generated/upstream').get().asFile)
+  res.srcDir(new File(upstream,'src/main/res'))
+  assets.srcDir(new File(upstream,'src/main/assets'))
+  jniLibs.srcDir(new File(upstream,'src/main/jniLibs'))
+ }
+ lint { disable 'UnsafeOptInUsageError' }
+}
+tasks.named('preBuild').configure { dependsOn(prepare) }
+dependencies {
+ implementation 'androidx.annotation:annotation:1.9.1'
+ if(project.name != 'newtube-shared') implementation project(':newtube-shared')
+ if(project.name in ['newtube-shared','newtube-interfaces','newtube-api']) {
+  implementation 'io.reactivex.rxjava3:rxjava:3.1.10'
+  implementation 'io.reactivex.rxjava3:rxandroid:3.0.2'
+ }
+ if(project.name in ['newtube-shared','newtube-api']) {
+  implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+  implementation 'com.google.code.gson:gson:2.11.0'
+  implementation 'commons-io:commons-io:2.18.0'
+  implementation 'androidx.core:core-ktx:1.16.0'
+  implementation 'org.chromium.net:cronet-api:143.7445.0'
+ }
+ if(project.name == 'newtube-shared') {
+  implementation 'androidx.appcompat:appcompat:1.7.0'
+  implementation 'androidx.preference:preference:1.2.1'
+  implementation 'com.squareup.okhttp3:okhttp-dnsoverhttps:4.12.0'
+  implementation 'com.squareup.okhttp3:logging-interceptor:4.12.0'
+  implementation 'com.squareup.okhttp3:okhttp-brotli:4.12.0'
+  implementation 'org.chromium.net:cronet-embedded:143.7445.0'
+  implementation 'com.jakewharton:disklrucache:2.0.2'
+  implementation 'info.guardianproject.netcipher:netcipher:2.1.0'
+  implementation 'dnsjava:dnsjava:3.6.3'
+ }
+ if(project.name == 'newtube-api') {
+  implementation project(':newtube-interfaces')
+  implementation project(':newtube-v8')
+  implementation 'com.squareup.retrofit2:retrofit:2.11.0'
+  implementation 'com.squareup.retrofit2:converter-gson:2.11.0'
+  implementation 'com.jayway.jsonpath:json-path:2.9.0'
+  implementation 'com.google.net.cronet:cronet-okhttp:0.1.1'
+  implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2'
+  implementation 'com.github.florianingerl.util:regex:1.1.11'
+  implementation 'androidx.webkit:webkit:1.12.1'
+  implementation 'com.grack:nanojson:1.8'
+ }
+ if(project.name == 'newtube-sabr') {
+  api 'androidx.media3:media3-exoplayer:1.10.1'
+  implementation 'com.google.protobuf:protobuf-javalite:3.22.3'
+ }
+}
+if(project.name == 'newtube-sabr') {
+ configurations { sabrProtoc }
+ dependencies { sabrProtoc 'com.google.protobuf:protoc:3.22.3:linux-x86_64@exe' }
+ def output = layout.buildDirectory.dir('generated/proto')
+ def generate = tasks.register('generateSabrProto', Exec) {
+  inputs.files(fileTree(new File(upstream,'src/main/proto')) { include '**/*.proto' })
+  outputs.dir(output)
+  doFirst {
+   def exe=configurations.sabrProtoc.singleFile; exe.setExecutable(true)
+   output.get().asFile.mkdirs()
+   commandLine([exe.absolutePath,'--proto_path='+new File(upstream,'src/main/proto').absolutePath,
+    '--java_out=lite:'+output.get().asFile.absolutePath] + fileTree(new File(upstream,'src/main/proto')).matching { include '**/*.proto' }.files.collect {it.absolutePath})
+  }
+ }
+ android.sourceSets.main.java.srcDir(output.get().asFile)
+ tasks.named('preBuild').configure { dependsOn(generate) }
+}

@@ -26,12 +26,16 @@ A amostra externa Big Buck Bunny é de (c) 2008 Blender Foundation, https://www.
 
 YouTube e Google são marcas de seus titulares. O player incorporado e as miniaturas são fornecidos por serviços externos. Este aplicativo não é um cliente oficial do YouTube.
 
-Nenhum código de SmartTube, MediaServiceCore, NewTube, Flow ou NewPipeExtractor foi copiado ou incluído. Licenças de referência documentadas em `docs/REFERENCES.md` não são atribuídas ao código original deste projeto.
+A partir de 0.3.0, NewTube, MediaServiceCore e SharedModules são incorporados por submódulo fixado. Adaptadores SABR/DASH foram derivados do fonte NewTube. Código Flow ou NewPipeExtractor não foi incluído. Textos MIT completos e avisos SABR/V8 estão nos assets; modificações do host são descritas em native/upstream.gradle e docs/NEWTUBE_NATIVE_030.md.
 
 ## Inter (fonte)
 
 Inter Regular, SemiBold e ExtraBold, © 2016-2023 The Inter Project Authors (https://github.com/rsms/inter). SIL Open Font License 1.1 — texto completo em `app/src/main/assets/licenses/Inter-OFL-1.1.txt`.
 
-## Google identity integration
+## Backend nativo 0.3.0
 
-AndroidX Credential Manager / credentials-play-services-auth: Apache 2.0. Google ID (com.google.android.libraries.identity.googleid:googleid:1.1.1) and Google Play Services dependencies: Android Software Development Kit License, https://developer.android.com/studio/terms.html (license metadata checked in the published POM). No NewTube source or credentials are embedded.
+NewTube v1.17.1 / MediaServiceCore / SharedModules: MIT, Copyright (c) 2020-present yuliskov e contribuidores NewTube. Fonte fixado no submódulo `vendor/newtube`; licenças completas em NewTube-MIT.txt, MediaServiceCore-MIT.txt e SharedModules-MIT.txt.
+
+SABR: fonte experimental do NewTube com protocolos derivados; ver SABR-UPSTREAM-LICENSE.txt (Apache 2.0) e SABR-PROVENANCE.md. J2V8/V8: ver J2V8-LICENSE.txt. Cronet/Chromium: BSD e avisos das dependências correspondentes. Retrofit, OkHttp, RxJava, Gson, AndroidX Security e protobuf: licenças fornecidas por seus respectivos autores e metadados de distribuição.
+
+Não se reivindica autoria do backend de referência nem afiliação ao Google/YouTube. Os patches do host alteram armazenamento, logs, polling/expiração, apresentação do código, validação de origem e verificação TLS; são aplicados às cópias de compilação, sem alterar o submódulo. A opção upstream de solicitar playback sem anúncios é desabilitada pelo host. Google ID/Credential Manager não compõem mais a implementação de login ativa.

@@ -1,3 +1,5 @@
+> Histórico do caminho anterior. A versão 0.3.0 adotou o backend NewTube por decisão do proprietário. A configuração de cliente OAuth próprio descrita abaixo não é mais usada pelo login ativo. Ver [NEWTUBE_NATIVE_030.md](NEWTUBE_NATIVE_030.md).
+
 # Configuração do login Google — OndaTube
 
 O código anterior tinha apenas `OfficialOAuthPending`; não existiam pedido de autorização, botão funcional, callback nem sessão a reparar. A implementação usa Credential Manager + Google ID, com seleção nativa de conta, sem WebView de login ou cliente emprestado do NewTube.

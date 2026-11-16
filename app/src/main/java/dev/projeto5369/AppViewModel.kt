@@ -20,10 +20,7 @@ val HOME_TOPICS = listOf(
 )
 val SHORTS_TOPICS = listOf(Topic("Para você","curiosidades"), Topic("Ônibus","ônibus"), Topic("Tecnologia","tecnologia"), Topic("Humor","humor"), Topic("Música","música"))
 class AppViewModel(app: Application): AndroidViewModel(app) {
-    private val accountPreferences = app.getSharedPreferences("account_restore", android.content.Context.MODE_PRIVATE)
-    internal val account = AccountSession(viewModelScope, GoogleAccountGateway(app, BuildConfig.GOOGLE_WEB_CLIENT_ID),
-        BuildConfig.GOOGLE_WEB_CLIENT_ID.isNotBlank(), { accountPreferences.getBoolean("enabled", false) },
-        { accountPreferences.edit().putBoolean("enabled", it).apply() })
+    internal val account = DeviceAccountSession(viewModelScope, dev.projeto5369.nativeplayer.NewTubeAccountGateway(app))
     private val catalog: Catalog = YouTubeCatalog(onHttp = { endpoint, status -> android.util.Log.i("P5369Catalog", "stage=$endpoint http=$status") })
     private val store = LocalStore(app)
     val library = store.library.stateIn(viewModelScope,SharingStarted.WhileSubscribed(5_000),Library())

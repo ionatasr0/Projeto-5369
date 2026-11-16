@@ -40,7 +40,7 @@ private fun NavHostController.tab(route: String) = navigate(route) {
 fun App(vm: AppViewModel = viewModel()) {
     val context = androidx.compose.ui.platform.LocalContext.current
     val accountState by vm.account.state.collectAsStateWithLifecycle()
-    LaunchedEffect(Unit) { vm.account.restore(context) }
+    LaunchedEffect(Unit) { vm.account.restore() }
     val nav = rememberNavController()
     val current by nav.currentBackStackEntryAsState()
     val library by vm.library.collectAsStateWithLifecycle()
@@ -109,7 +109,7 @@ fun App(vm: AppViewModel = viewModel()) {
                 }
                 composable("stats") { StatsScreen(library, ::open, onChannel = { nav.navigate("channel/$it") }) }
                 composable("settings") {
-                    SettingsScreen(library, vm::preferences, vm::glass, vm::clearHistory, onDemo = { nav.navigate("media-demo") }, onBack = { nav.popBackStack() }, accountState = accountState, onSignIn = { vm.account.signIn(context) }, onSignOut = vm.account::signOut, onCancelAuth = vm.account::cancel)
+                    SettingsScreen(library, vm::preferences, vm::glass, vm::clearHistory, onDemo = { nav.navigate("media-demo") }, onBack = { nav.popBackStack() }, accountState = accountState, onSignIn = { vm.account.signIn() }, onSignOut = vm.account::signOut, onCancelAuth = vm.account::cancel)
                 }
                 composable("media-demo") { MediaDemoScreen(onBack = { nav.popBackStack() }) }
             }

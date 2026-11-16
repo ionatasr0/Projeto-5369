@@ -270,7 +270,7 @@ fun LibraryScreen(library: Library, open: (Video) -> Unit, onList: (String) -> U
                         contentAlignment = Alignment.Center) { Icon(OndaIcons.User, null, tint = Color.Black, modifier = Modifier.size(28.dp)) }
                     Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
                         Text((accountState as? AuthState.SignedIn)?.displayName ?: "Visitante", style = OndaType.title, color = c.text)
-                        Text("Sua biblioteca fica salva neste aparelho. Conta Google em Ajustes.", style = OndaType.small, color = c.muted)
+                        Text("Sua biblioteca fica salva neste aparelho. Conta YouTube em Ajustes.", style = OndaType.small, color = c.muted)
                     }
                 }
             }
@@ -428,33 +428,45 @@ fun SettingsScreen(library: Library, preferences: (Int, Boolean) -> Unit, glass:
             }
             Pill("Limpar histórico e pesquisas", clear)
         } }
-        item("account") { Card("Conta Google") {
+        item("account") { Card("Conta YouTube") {
             Text(when (accountState) {
                 is AuthState.SignedIn -> "Conectado como ${accountState.displayName}"
-                is AuthState.ConfigurationRequired -> accountState.message
                 is AuthState.Failure -> accountState.message
-                AuthState.Busy -> "Aguardando Google…"
+                AuthState.Busy -> "Conectando ao YouTube…"
+                is AuthState.DeviceCode -> "Autorize sua conta no Google e volte ao OndaTube."
                 AuthState.Guest -> "Modo visitante"
             }, style = OndaType.body, color = c.muted)
             when (accountState) {
                 AuthState.Busy -> Pill("Cancelar login", onCancelAuth)
-                is AuthState.SignedIn -> Pill("Sair da conta Google", onSignOut)
+                is AuthState.DeviceCode -> {
+                    androidx.compose.foundation.text.selection.SelectionContainer {
+                        Text(accountState.code,style=OndaType.title,color=c.accent)
+                    }
+                    val accountContext=androidx.compose.ui.platform.LocalContext.current
+                    Pill("Continuar com o Google", {
+                        val target=android.net.Uri.parse(accountState.verificationUrl)
+                        runCatching { accountContext.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW,target)) }
+                    })
+                    Text("O Google pode identificar este acesso como uma TV. Confira a conta e as permissões, informe o código e volte ao OndaTube.",style=OndaType.small,color=c.muted)
+                    Pill("Cancelar",onCancelAuth)
+                }
+                is AuthState.SignedIn -> Pill("Sair da conta YouTube", onSignOut)
                 else -> {
-                    Pill("Entrar com o Google", onSignIn)
+                    Pill("Entrar na conta YouTube", onSignIn)
                     if (accountState is AuthState.Failure) Pill("Limpar sessão Google", onSignOut)
                 }
             }
-            Text("O login identifica sua conta no OndaTube. Favoritos e histórico continuam locais. O player oficial do YouTube tem sua própria sessão e restrições.", style = OndaType.small, color = c.muted)
+            Text("Login por código, com autorização na página do Google. A conta é usada pelo backend nativo. Seus favoritos e histórico locais são preservados.", style = OndaType.small, color = c.muted)
         } }
         item("playback") { Card("Reprodução") {
-            Text("YouTube: player incorporado oficial, com os controles e anúncios dele. Incorporação, disponibilidade e autorização dependem do YouTube e do proprietário. O botão de tela cheia do player gira para horizontal.", style = OndaType.body, color = c.muted)
+            Text("Player nativo Media3 com backend NewTube. O vídeo é reproduzido no aplicativo; a autorização de conta acontece na página do Google. Disponibilidade e restrições continuam dependendo do YouTube.", style = OndaType.body, color = c.muted)
             Pill("Testar Media3 com amostra autorizada", onDemo)
         } }
         item("about") { Card("Sobre") {
-            Text("OndaTube 0.2.2 · ecossistema Onda · JoojDevs\nBase técnica: Projeto 5369. Sem recomendações personalizadas oficiais; Shorts ficam fora do catálogo de vídeos longos.", style = OndaType.small, color = c.muted)
+            Text("OndaTube 0.3.0 · ecossistema Onda · JoojDevs\nBase técnica: Projeto 5369. Sem recomendações personalizadas oficiais; Shorts ficam fora do catálogo de vídeos longos.", style = OndaType.small, color = c.muted)
         } }
         item("licenses") { Card("Licenças de dependências") {
-            Text("AndroidX/Compose/Media3/DataStore/Credential Manager: Apache 2.0\nGoogle ID/Play Services: Android SDK License\nKotlin e kotlinx: Apache 2.0\nOkHttp: Apache 2.0\nCoil: Apache 2.0\nProtobuf transitivo do DataStore: BSD 3-Clause\nFonte Inter: SIL Open Font License 1.1\nNenhum código GPL dos clientes de referência incorporado.", style = OndaType.small, color = c.muted)
+            Text("AndroidX/Compose/Media3/DataStore/Security: Apache 2.0\nNewTube/MediaServiceCore/SharedModules: MIT\nSABR/protocolos e bibliotecas nativas: avisos completos incluídos no APK\nKotlin e kotlinx: Apache 2.0\nOkHttp: Apache 2.0\nCoil: Apache 2.0\nProtobuf transitivo do DataStore: BSD 3-Clause\nFonte Inter: SIL Open Font License 1.1\nNenhum código GPL dos clientes de referência incorporado.", style = OndaType.small, color = c.muted)
         } }
     }
 }

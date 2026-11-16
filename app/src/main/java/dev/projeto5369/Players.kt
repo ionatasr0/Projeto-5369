@@ -45,6 +45,7 @@ import kotlinx.coroutines.delay
 internal object PlayerDebug {
     @Volatile var autoplayMuted = false
     @Volatile var lastTime = -1.0
+    @Volatile var firstFrame = false
     @Volatile var host: String? = null
     /** Diagnostics only: "iframeapi" (default) or "embedurl"; software layer; visible probe colours. */
     @Volatile var mode = "iframeapi"
@@ -123,7 +124,7 @@ private class FullscreenChrome(private val context: Context, private val onChang
 
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
-fun YouTubePlayer(video: Video,onPlaying: () -> Unit,modifier: Modifier = Modifier,aspect: Float = 16f/9f,showOpenExternal: Boolean = true) {
+fun OfficialEmbedPlayer(video: Video,onPlaying: () -> Unit,modifier: Modifier = Modifier,aspect: Float = 16f/9f,showOpenExternal: Boolean = true) {
     val context = LocalContext.current
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     val onPlay by rememberUpdatedState(onPlaying)

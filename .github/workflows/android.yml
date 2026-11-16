@@ -15,25 +15,17 @@ jobs:
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v5
+        with:
+          submodules: recursive
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '21'
       - uses: android-actions/setup-android@v3
         with:
-          packages: platform-tools platforms;android-35 build-tools;35.0.0
+          packages: platform-tools platforms;android-36 build-tools;35.0.0
           log-accepted-android-sdk-licenses: false
       - uses: gradle/actions/setup-gradle@v4
-      - name: Configure own Google client (optional repository variable)
-        env:
-          GOOGLE_WEB_CLIENT_ID: ${{ vars.GOOGLE_WEB_CLIENT_ID }}
-        shell: bash
-        run: |
-          mkdir -p "$HOME/.gradle"
-          if [ -n "$GOOGLE_WEB_CLIENT_ID" ]; then
-            [[ "$GOOGLE_WEB_CLIENT_ID" =~ ^[A-Za-z0-9.-]+\.apps\.googleusercontent\.com$ ]]
-            printf '\ngoogleWebClientId=%s\n' "$GOOGLE_WEB_CLIENT_ID" >> "$HOME/.gradle/gradle.properties"
-          fi
       - name: Compile, test and lint
         shell: bash
         run: |
@@ -65,13 +57,15 @@ jobs:
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v5
+        with:
+          submodules: recursive
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '21'
       - uses: android-actions/setup-android@v3
         with:
-          packages: platform-tools platforms;android-35 build-tools;35.0.0
+          packages: platform-tools platforms;android-36 build-tools;35.0.0
           log-accepted-android-sdk-licenses: false
       - uses: gradle/actions/setup-gradle@v4
       - name: Enable KVM
@@ -86,7 +80,7 @@ jobs:
           arch: x86_64
           profile: pixel_2
           disable-animations: true
-          script: bash -c 'set +e; ./gradlew :app:connectedDebugAndroidTest -Pandroid.injected.androidTest.leaveApksInstalledAfterRun=true --stacktrace --console=plain; result=$?; mkdir -p ui-shots; for name in ui-home.png ui-watch.png; do adb exec-out run-as dev.projeto5369 cat files/$name > ui-shots/$name; done; exit $result'
+          script: bash -c 'set +e; ./gradlew :app:connectedDebugAndroidTest -PnativeTestAbi=x86_64 -Pandroid.injected.androidTest.leaveApksInstalledAfterRun=true --stacktrace --console=plain; result=$?; mkdir -p ui-shots; for name in ui-home.png ui-watch.png; do adb exec-out run-as dev.projeto5369 cat files/$name > ui-shots/$name; done; exit $result'
       - name: Device test reports
         if: always()
         uses: actions/upload-artifact@v4
@@ -100,19 +94,21 @@ jobs:
 
   live-youtube:
     name: Reprodução real YouTube (diagnóstico externo)
-    if: github.ref == 'refs/heads/fix/login-video-playback' && github.event_name == 'workflow_dispatch'
+    if: github.ref == 'refs/heads/fix/login-video-playback'
     continue-on-error: true
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v5
+        with:
+          submodules: recursive
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '21'
       - uses: android-actions/setup-android@v3
         with:
-          packages: platform-tools platforms;android-35 build-tools;35.0.0
+          packages: platform-tools platforms;android-36 build-tools;35.0.0
           log-accepted-android-sdk-licenses: false
       - uses: gradle/actions/setup-gradle@v4
       - name: Enable KVM
@@ -127,7 +123,7 @@ jobs:
           arch: x86_64
           profile: pixel_2
           disable-animations: true
-          script: ./gradlew :app:connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.ytLive=true -Pandroid.testInstrumentationRunnerArguments.class=dev.projeto5369.LiveYouTubePlaybackTest --console=plain
+          script: ./gradlew :app:connectedDebugAndroidTest -PnativeTestAbi=x86_64 -Pandroid.testInstrumentationRunnerArguments.ytLive=true -Pandroid.testInstrumentationRunnerArguments.class=dev.projeto5369.LiveYouTubePlaybackTest,dev.projeto5369.NativeBackendTest --console=plain
       - name: Actual platform result (separate from deterministic tests)
         if: always()
         run: |

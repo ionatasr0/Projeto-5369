@@ -1,3 +1,5 @@
+> Histórico do caminho anterior. A versão 0.3.0 adotou o backend NewTube por decisão do proprietário. A configuração de cliente OAuth próprio descrita abaixo não é mais usada pelo login ativo. Ver [NEWTUBE_NATIVE_030.md](NEWTUBE_NATIVE_030.md).
+
 # Catálogo, InnerTube, reprodução e autenticação
 
 ## O que foi implementado
