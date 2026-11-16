@@ -38,7 +38,7 @@ import dev.projeto5369.ui.*
 /** Watch screen: official player on top, Onda chrome around it (never over it), ambient blur from the thumbnail. */
 @Composable
 fun WatchScreen(video: Video, detailError: String?, library: Library, upNext: List<Video>, onPlaying: () -> Unit, onFavorite: () -> Unit,
-                onFollow: (Channel) -> Unit, onChannel: (String) -> Unit, open: (Video) -> Unit, onBack: () -> Unit) {
+                onFollow: (Channel) -> Unit, onChannel: (String) -> Unit, open: (Video) -> Unit, onBack: () -> Unit, onAccount: () -> Unit = {}) {
     val c = LocalOnda.current
     val context = LocalContext.current
     val favorite = library.favorites.any { it.id == video.id }
@@ -57,8 +57,8 @@ fun WatchScreen(video: Video, detailError: String?, library: Library, upNext: Li
                 Text("OndaTube",style=OndaType.cardTitle,color=c.text,modifier=Modifier.weight(1f).padding(horizontal=14.dp))
                 CircleIcon(OndaIcons.Share,"Compartilhar",{ share(context,video) })
             }
-            YouTubePlayer(video,onPlaying=onPlaying,showOpenExternal=true,modifier=Modifier.fillMaxWidth())
-            LazyColumn(Modifier.weight(1f).fillMaxWidth().testTag("watch-list"),contentPadding=PaddingValues(bottom=32.dp)) {
+            YouTubePlayer(video,onPlaying=onPlaying,showOpenExternal=true,modifier=Modifier.fillMaxWidth(),onAccount=onAccount)
+            LazyColumn(Modifier.weight(1f).fillMaxWidth().navigationBarsPadding().testTag("watch-list"),contentPadding=PaddingValues(bottom=32.dp)) {
             item("info") {
                 OndaSurface(Modifier.padding(start = 10.dp, end = 10.dp, top = 12.dp).fillMaxWidth(), RoundedCornerShape(28.dp), strong = c.glass) {
                     Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {

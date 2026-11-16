@@ -45,7 +45,9 @@ object NativeSources {
         withContext(Dispatchers.IO) { NewTubeBackend.initialize(context) }
         val info=withTimeout(35_000) { formats(id) }
         return withContext(Dispatchers.IO) {
-            if(info.isBotCheckRequired || info.isUnplayable) throw NativePlaybackFailure("authorization","O YouTube não autorizou este vídeo. Confira sua conta e a disponibilidade do conteúdo.")
+            android.util.Log.i("P5369Player","video=$id stage=metadata bot_check=${info.isBotCheckRequired} unavailable=${info.isUnplayable}")
+            if(info.isBotCheckRequired) throw NativePlaybackFailure("authorization","O YouTube solicitou uma verificação de acesso. Confira sua conta; nenhuma fonte autorizada foi fornecida.")
+            if(info.isUnplayable) throw NativePlaybackFailure("unavailable","Este vídeo não está disponível para reprodução nativa. Confira a disponibilidade no YouTube.")
             if(!info.containsMedia()) throw NativePlaybackFailure("unavailable","Vídeo indisponível para reprodução nativa.")
             // The host has no native YouTube ad renderer. Never silently discard an announced ad.
             if(info.prerollWaitMs > 0) throw NativePlaybackFailure("ads","Este vídeo exige anúncios que o player nativo ainda não reproduz. Abra no YouTube para assistir.")

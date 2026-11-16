@@ -86,14 +86,14 @@ fun App(vm: AppViewModel = viewModel()) {
                     LaunchedEffect(id) { vm.ensureRelated(video) }
                     val upNext = relatedState.takeIf { it.videoId == id }?.items.orEmpty().filter { it.id != id }.take(20)
                     WatchScreen(video, detailError, library, upNext, onPlaying = { vm.watched(video) }, onFavorite = { vm.favorite(video) },
-                        onFollow = vm::follow, onChannel = { nav.navigate("channel/$it") }, open = ::open, onBack = { nav.popBackStack() })
+                        onFollow = vm::follow, onChannel = { nav.navigate("channel/$it") }, open = ::open, onBack = { nav.popBackStack() }, onAccount = { nav.navigate("settings") })
                 }
                 composable("player/{id}", arguments = listOf(navArgument("id") { type = NavType.StringType })) { entry ->
                     val id = entry.arguments!!.getString("id")!!
                     val video = vm.selected(id)
                     LaunchedEffect(id) { vm.ensureRelated(video) }
                     WatchScreen(video, detailError, library, relatedState.takeIf { it.videoId == id }?.items.orEmpty().filter { it.id != id }.take(20), onPlaying = { vm.watched(video) }, onFavorite = { vm.favorite(video) },
-                        onFollow = vm::follow, onChannel = { nav.navigate("channel/$it") }, open = ::open, onBack = { nav.popBackStack() })
+                        onFollow = vm::follow, onChannel = { nav.navigate("channel/$it") }, open = ::open, onBack = { nav.popBackStack() }, onAccount = { nav.navigate("settings") })
                 }
                 composable("shorts") {
                     LaunchedEffect(Unit) { vm.shorts() }

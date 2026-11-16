@@ -40,7 +40,7 @@ private tailrec fun Context.hostActivity(): Activity? = when(this) { is Activity
 
 @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
 @Composable
-fun YouTubePlayer(video: Video,onPlaying: () -> Unit,modifier: Modifier=Modifier,aspect: Float=16f/9f,showOpenExternal: Boolean=true) {
+fun YouTubePlayer(video: Video,onPlaying: () -> Unit,modifier: Modifier=Modifier,aspect: Float=16f/9f,showOpenExternal: Boolean=true,onAccount: (() -> Unit)?=null) {
     val context=LocalContext.current
     val lifecycle=LocalLifecycleOwner.current.lifecycle
     val onPlay by rememberUpdatedState(onPlaying)
@@ -48,6 +48,7 @@ fun YouTubePlayer(video: Video,onPlaying: () -> Unit,modifier: Modifier=Modifier
     var full by remember(video.id) { mutableStateOf(false) }
     var phase by remember(video.id,attempt) { mutableStateOf("Preparando vídeo…") }
     var failure by remember(video.id,attempt) { mutableStateOf<String?>(null) }
+    var failureCategory by remember(video.id,attempt) { mutableStateOf<String?>(null) }
     var loading by remember(video.id,attempt) { mutableStateOf(true) }
     var kind by remember(video.id,attempt) { mutableStateOf("native") }
     val began=remember(video.id,attempt) { SystemClock.elapsedRealtime() }
@@ -88,7 +89,7 @@ fun YouTubePlayer(video: Video,onPlaying: () -> Unit,modifier: Modifier=Modifier
             if(e !is TimeoutCancellationException) throw e
             loading=false; failure="O carregamento demorou demais. Tente novamente."
         } catch(e: NativePlaybackFailure) {
-            loading=false; failure=e.displayMessage
+            loading=false; failure=e.displayMessage; failureCategory=e.category
             Log.w("P5369Player","video=${video.id} stage=resolve category=${e.category} state=ERROR")
         } catch(_: Exception) { loading=false; failure="Não foi possível preparar o vídeo. Verifique a conexão e tente novamente." }
     }
@@ -131,8 +132,9 @@ fun YouTubePlayer(video: Video,onPlaying: () -> Unit,modifier: Modifier=Modifier
         Text(failure ?: phase,style=OndaType.small,color=if(failure == null) LocalOnda.current.muted else Danger,
             modifier=Modifier.padding(horizontal=16.dp).testTag("yt-status"))
         if(failure != null) Row(Modifier.padding(horizontal=16.dp),horizontalArrangement=Arrangement.spacedBy(8.dp)) {
-            Pill("Tentar novamente",{ failure=null; attempt++ },primary=true)
-            if(showOpenExternal) Pill("Abrir no YouTube",{ runCatching { context.startActivity(Intent(Intent.ACTION_VIEW,Uri.parse("https://www.youtube.com/watch?v=${video.id}"))) } })
+            if(failureCategory == "authorization" && onAccount != null) Pill("Entrar na conta",onAccount,primary=true)
+            Pill("Tentar novamente",{ failure=null; attempt++ },primary=failureCategory != "authorization" || onAccount == null)
+            if(showOpenExternal && (failureCategory != "authorization" || onAccount == null)) Pill("Abrir no YouTube",{ runCatching { context.startActivity(Intent(Intent.ACTION_VIEW,Uri.parse("https://www.youtube.com/watch?v=${video.id}"))) } })
         }
     }
     if(full) Dialog(onDismissRequest={full=false},properties=DialogProperties(usePlatformDefaultWidth=false,decorFitsSystemWindows=false)) {
